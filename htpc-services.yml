@@ -1,0 +1,84 @@
+version: '3.0'
+
+services:
+ sabnzbd:
+    image: sabnzbdplus
+    container_name: sabnzbdplus
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /home/mark/config/sabnzbd:/config
+      - /media/download/complete:/downloads
+      - /media/download/incomplete:/incomplete-downloads #optional
+      - /media/download/watch:/media/watch
+      - /media/toshibaDrive/TV:/media/TV
+      - /media/toshibaDrive/MOVIES/:/media/MOVIES
+    ports:
+      - 8088:8080
+      - 9099:9090
+    restart: unless-stopped
+    networks:
+        htpc_net:
+            ipv4_address: 172.66.1.1
+ sickchill:
+    image: linuxserver/sickchill:latest
+    container_name: sickchill
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /home/mark/config/sickchill:/config
+      - /media/download/complete:/downloads
+      - /media/toshibaDrive/TV:/tv
+    ports:
+      - 8099:8081
+    restart: unless-stopped
+    networks:
+        htpc_net:
+            ipv4_address: 172.66.1.2
+ transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /home/mark/config/transmission:/config
+      - /media/download/complete:/downloads
+      - /media/download/watch:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+    networks:
+        htpc_net:
+            ipv4_address: 172.66.1.3
+ couchpotato:
+    image: linuxserver/couchpotato
+    container_name: couchpotato
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/London
+      - UMASK_SET=777
+    volumes:
+      - /media/download/CPConfig:/config
+      - /media/download/complete:/downloads
+      - /media/toshibaDrive/MOVIES/:/movies
+    ports:
+      - 5050:5050
+    restart: unless-stopped
+    networks:
+        htpc_net:
+            ipv4_address: 172.66.1.4
+networks:
+    htpc_net:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.66.0.0/16
