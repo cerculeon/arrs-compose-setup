@@ -94,6 +94,24 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.5
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022 #optional
+    volumes:
+      - /home/mark/config/radarr:/config
+      - /media/toshibaDrive/TV:/tv
+      - /media/download/complete:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.6
 networks:
   htpc_net:
     ipam:
