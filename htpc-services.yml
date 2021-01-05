@@ -58,6 +58,24 @@ services:
     networks:
         htpc_net:
             ipv4_address: 172.66.1.3
+ plex:
+    image: linuxserver/plex
+    container_name: plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    volumes:
+      - /home/mark/config/plex:/config
+      - /media/toshibaDrive/TV:/tv
+      - /media/toshibaDrive/MOVIES:/movies
+      - /media/transcode:/transcode
+    ports:
+      - 32400:32400
+    restart: unless-stopped
+    networks:
+        htpc_net:
+            ipv4_address: 172.66.1.4
 networks:
     htpc_net:
         ipam:
