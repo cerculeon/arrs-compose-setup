@@ -58,6 +58,24 @@ services:
     networks:
         htpc_net:
             ipv4_address: 172.66.1.3
+radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022 #optional
+    volumes:
+      - /home/mark/config/radarr:/config
+      - /media/toshibaDrive/MOVIES:/movies
+      - /media/download/complete:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    networks:
+        htpc_net:
+            ipv4_address: 172.66.1.4       
 networks:
     htpc_net:
         ipam:
