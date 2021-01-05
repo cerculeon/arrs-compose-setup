@@ -1,7 +1,7 @@
-version: '3.0'
+version: "3.0"
 
 services:
- sabnzbd:
+  sabnzbd:
     image: sabnzbdplus
     container_name: sabnzbdplus
     environment:
@@ -20,9 +20,9 @@ services:
       - 9099:9090
     restart: unless-stopped
     networks:
-        htpc_net:
-            ipv4_address: 172.66.1.1
- sickchill:
+      htpc_net:
+        ipv4_address: 172.66.1.1
+  sickchill:
     image: linuxserver/sickchill:latest
     container_name: sickchill
     environment:
@@ -37,9 +37,9 @@ services:
       - 8099:8081
     restart: unless-stopped
     networks:
-        htpc_net:
-            ipv4_address: 172.66.1.2
- transmission:
+      htpc_net:
+        ipv4_address: 172.66.1.2
+  transmission:
     image: linuxserver/transmission
     container_name: transmission
     environment:
@@ -56,9 +56,9 @@ services:
       - 51413:51413/udp
     restart: unless-stopped
     networks:
-        htpc_net:
-            ipv4_address: 172.66.1.3
- plex:
+      htpc_net:
+        ipv4_address: 172.66.1.3
+  plex:
     image: linuxserver/plex
     container_name: plex
     environment:
@@ -74,9 +74,9 @@ services:
       - 32400:32400
     restart: unless-stopped
     networks:
-        htpc_net:
-            ipv4_address: 172.66.1.4
-radarr:
+      htpc_net:
+        ipv4_address: 172.66.1.4
+  radarr:
     image: linuxserver/radarr
     container_name: radarr
     environment:
@@ -92,11 +92,11 @@ radarr:
       - 7878:7878
     restart: unless-stopped
     networks:
-        htpc_net:
-            ipv4_address: 172.66.1.5     
+      htpc_net:
+        ipv4_address: 172.66.1.5
 networks:
-    htpc_net:
-        ipam:
-            driver: default
-            config:
-                - subnet: 172.66.0.0/16
+  htpc_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.66.0.0/16
