@@ -101,7 +101,7 @@ services:
       - TZ=Europe/London
       - UMASK_SET=022 #optional
     volumes:
-      - /home/mark/config/radarr:/config
+      - /home/mark/config/sonarr:/config
       - /media/toshibaDrive/TV:/tv
       - /media/download/complete:/downloads
     ports:
