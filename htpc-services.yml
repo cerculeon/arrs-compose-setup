@@ -65,6 +65,7 @@ services:
       - PUID=1001
       - PGID=1001
       - VERSION=docker
+    network_mode: host
     volumes:
       - /home/mark/config/plex:/config
       - /media/toshibaDrive/TV:/tv
@@ -73,9 +74,6 @@ services:
     ports:
       - 32400:32400
     restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.4
   radarr:
     image: linuxserver/radarr
     container_name: radarr
