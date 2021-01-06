@@ -68,8 +68,8 @@ services:
     network_mode: host
     volumes:
       - /home/mark/config/plex:/config
-      - /media/toshibaDrive/TV:/tv
-      - /media/toshibaDrive/MOVIES:/movies
+      - /media/toshibaDrive/TV:/data/tvshows
+      - /media/toshibaDrive/MOVIES:/data/movies
       - /media/transcode:/transcode
     ports:
       - 32400:32400
@@ -81,7 +81,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - UMASK_SET=022 #optional
+      - UMASK_SET=002 #optional
     volumes:
       - /home/mark/config/radarr:/config
       - /media/toshibaDrive/MOVIES:/movies
@@ -99,7 +99,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - UMASK_SET=022 #optional
+      - UMASK_SET=002 #optional
     volumes:
       - /home/mark/config/sonarr:/config
       - /media/toshibaDrive/TV:/tv
