@@ -2,8 +2,8 @@ version: "3.0"
 
 services:
   sabnzbd:
-    image: sabnzbdplus
-    container_name: sabnzbdplus
+    image: linuxserver/sabnzbd
+    container_name: sabnzbd
     environment:
       - PUID=1000
       - PGID=1000
