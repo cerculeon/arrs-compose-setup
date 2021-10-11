@@ -24,21 +24,6 @@ services:
         ipv4_address: 172.66.1.1
   sickchill:
     image: linuxserver/sickchill:latest
-    container_name: sickchill
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - /home/mark/config/sickchill:/config
-      - /media/download/complete:/downloads
-      - /media/toshibaDrive/TV:/tv
-    ports:
-      - 8099:8081
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.2
   transmission:
     image: linuxserver/transmission
     container_name: transmission
@@ -71,8 +56,6 @@ services:
       - /media/toshibaDrive/TV:/data/tvshows
       - /media/toshibaDrive/MOVIES:/data/movies
       - /media/transcode:/transcode
-    ports:
-      - 32400:32400
     restart: unless-stopped
   radarr:
     image: linuxserver/radarr
