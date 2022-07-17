@@ -91,6 +91,22 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.6
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /home/mark/config/mylar3:/config
+      - /media/toshibaDrive/COMICS:/comics
+      - /media/download/complete:/downloads
+    ports:
+      - 8090:8090
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.7
 networks:
   htpc_net:
     ipam:
