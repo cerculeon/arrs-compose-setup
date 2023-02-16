@@ -107,7 +107,46 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.7
-networks:
+ prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - /home/mark/config/prowlarr:/config
+      - /media/toshibaDrive/MOVIES:/movies
+      - /media/download/complete:/downloads
+      - /media/download/watch:/watch
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.4
+
+  readarr:
+    image: linuxserver/readarr
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - /home/mark/config/readarr:/config
+      - /media/toshibaDrive/COMICS:/comics
+      - /media/download/complete:/downloads
+      - /media/download/watch:/watch
+    ports:
+      - 7879:7879
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.8
+tworks:
   htpc_net:
     ipam:
       driver: default
