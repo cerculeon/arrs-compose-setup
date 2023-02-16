@@ -2,8 +2,8 @@ version: "3.0"
 
 services:
   sabnzbd:
-    image: sabnzbdplus
-    container_name: sabnzbdplus
+    image: linuxserver/sabnzbd
+    container_name: sabnzbd
     environment:
       - PUID=1000
       - PGID=1000
@@ -22,25 +22,8 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.1
-  sickchill:
-    image: linuxserver/sickchill:latest
-    container_name: sickchill
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - /home/mark/config/sickchill:/config
-      - /media/download/complete:/downloads
-      - /media/toshibaDrive/TV:/tv
-    ports:
-      - 8099:8081
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.2
   transmission:
-    image: linuxserver/transmission
+    image: linuxserver/transmission:3.00-r5-ls137
     container_name: transmission
     environment:
       - PUID=1000
@@ -62,17 +45,15 @@ services:
     image: linuxserver/plex
     container_name: plex
     environment:
-      - PUID=1001
-      - PGID=1001
+      - PUID=1000
+      - PGID=1000
       - VERSION=docker
     network_mode: host
     volumes:
       - /home/mark/config/plex:/config
-      - /media/toshibaDrive/TV:/tv
-      - /media/toshibaDrive/MOVIES:/movies
+      - /media/toshibaDrive/TV:/data/tvshows
+      - /media/toshibaDrive/MOVIES:/data/movies
       - /media/transcode:/transcode
-    ports:
-      - 32400:32400
     restart: unless-stopped
   radarr:
     image: linuxserver/radarr
@@ -81,7 +62,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - UMASK_SET=022 #optional
+      - UMASK_SET=002 #optional
     volumes:
       - /home/mark/config/radarr:/config
       - /media/toshibaDrive/MOVIES:/movies
@@ -99,9 +80,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - UMASK_SET=022 #optional
+      - UMASK_SET=002 #optional
     volumes:
-      - /home/mark/config/radarr:/config
+      - /home/mark/config/sonarr:/config
       - /media/toshibaDrive/TV:/tv
       - /media/download/complete:/downloads
     ports:
@@ -110,6 +91,61 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.6
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /home/mark/config/mylar3:/config
+      - /media/toshibaDrive/COMICS:/comics
+      - /media/download/complete:/downloads
+    ports:
+      - 8090:8090
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.7
+ prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - /home/mark/config/prowlarr:/config
+      - /media/toshibaDrive/MOVIES:/movies
+      - /media/download/complete:/downloads
+      - /media/download/watch:/watch
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.4
+
+  readarr:
+    image: linuxserver/readarr
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - /home/mark/config/readarr:/config
+      - /media/toshibaDrive/COMICS:/comics
+      - /media/download/complete:/downloads
+      - /media/download/watch:/watch
+    ports:
+      - 7879:7879
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.8
 networks:
   htpc_net:
     ipam:
