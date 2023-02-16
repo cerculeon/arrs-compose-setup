@@ -107,7 +107,7 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.7
- prowlarr:
+  prowlarr:
     image: linuxserver/prowlarr
     container_name: prowlarr
     environment:
