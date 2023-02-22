@@ -108,7 +108,7 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.7
   prowlarr:
-    image: linuxserver/prowlarr
+    image: cr.hotio.dev/hotio/prowlarr
     container_name: prowlarr
     environment:
       - PUID=1000
@@ -117,18 +117,15 @@ services:
       - UMASK_SET=022
     volumes:
       - /home/mark/config/prowlarr:/config
-      - /media/toshibaDrive/MOVIES:/movies
-      - /media/download/complete:/downloads
-      - /media/download/watch:/watch
     ports:
-      - 8686:8686
+      - 9696:9696
     restart: unless-stopped
     networks:
       htpc_net:
         ipv4_address: 172.66.1.4
 
   readarr:
-    image: linuxserver/readarr
+    image: cr.hotio.dev/hotio/readarr
     container_name: readarr
     environment:
       - PUID=1000
@@ -137,11 +134,10 @@ services:
       - UMASK_SET=022
     volumes:
       - /home/mark/config/readarr:/config
-      - /media/toshibaDrive/COMICS:/comics
+      - /media/toshibaDrive/eBooks:/EBOOKS
       - /media/download/complete:/downloads
-      - /media/download/watch:/watch
     ports:
-      - 7879:7879
+      - 8787:8787
     restart: unless-stopped
     networks:
       htpc_net:
