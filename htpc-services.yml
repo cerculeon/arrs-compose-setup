@@ -22,7 +22,7 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.1
-    jackett:
+  jackett:
     image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
