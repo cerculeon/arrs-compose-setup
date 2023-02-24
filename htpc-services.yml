@@ -22,6 +22,24 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.1
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - AUTO_UPDATE=true #optional
+      #- RUN_OPTS= #optional
+    volumes:
+      - /home/mark/config/jackett:/config
+      - /media/download/watch:/downloads #this might be the wrong place, it could possibly need downloads instead, trying this as a first pass
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.2
   transmission:
     image: linuxserver/transmission:3.00-r5-ls137
     container_name: transmission
@@ -41,20 +59,22 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.3
-  plex:
-    image: linuxserver/plex
-    container_name: plex
+  prowlarr:
+    image: cr.hotio.dev/hotio/prowlarr
+    container_name: prowlarr
     environment:
       - PUID=1000
       - PGID=1000
-      - VERSION=docker
-    network_mode: host
+      - TZ=Europe/London
+      - UMASK_SET=022
     volumes:
-      - /home/mark/config/plex:/config
-      - /media/toshibaDrive/TV:/data/tvshows
-      - /media/toshibaDrive/MOVIES:/data/movies
-      - /media/transcode:/transcode
+      - /home/mark/config/prowlarr:/config
+    ports:
+      - 9696:9696
     restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.4
   radarr:
     image: linuxserver/radarr
     container_name: radarr
@@ -107,28 +127,8 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.7
- prowlarr:
-    image: linuxserver/prowlarr
-    container_name: prowlarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - UMASK_SET=022
-    volumes:
-      - /home/mark/config/prowlarr:/config
-      - /media/toshibaDrive/MOVIES:/movies
-      - /media/download/complete:/downloads
-      - /media/download/watch:/watch
-    ports:
-      - 8686:8686
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.4
-
   readarr:
-    image: linuxserver/readarr
+    image: cr.hotio.dev/hotio/readarr
     container_name: readarr
     environment:
       - PUID=1000
@@ -137,15 +137,28 @@ services:
       - UMASK_SET=022
     volumes:
       - /home/mark/config/readarr:/config
-      - /media/toshibaDrive/COMICS:/comics
+      - /media/toshibaDrive/eBooks:/EBOOKS
       - /media/download/complete:/downloads
-      - /media/download/watch:/watch
     ports:
-      - 7879:7879
+      - 8787:8787
     restart: unless-stopped
     networks:
       htpc_net:
         ipv4_address: 172.66.1.8
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    network_mode: host
+    volumes:
+      - /home/mark/config/plex:/config
+      - /media/toshibaDrive/TV:/data/tvshows
+      - /media/toshibaDrive/MOVIES:/data/movies
+      - /media/transcode:/transcode
+    restart: unless-stopped
 networks:
   htpc_net:
     ipam:
