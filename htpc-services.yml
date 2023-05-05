@@ -10,14 +10,14 @@ services:
       - TZ=Europe/London
     volumes:
       - /home/mark/config/sabnzbd:/config
-      - /media/download/complete:/downloads
-      - /media/download/incomplete:/incomplete-downloads #optional
-      - /media/download/watch:/media/watch
+      - /media/toshibaDrive/download/complete:/downloads
+      - /media/toshibaDrive/download/incomplete:/incomplete-downloads #optional
+      - /media/toshibaDrive/download/watch:/media/watch
       - /media/toshibaDrive/TV:/media/TV
-      - /media/toshibaDrive/MOVIES/:/media/MOVIES
+      - /media/oldDisk/MOVIES/:/media/MOVIES
     ports:
       - 8088:8080
-      - 9099:9090
+      - 9999:9090
     restart: unless-stopped
     networks:
       htpc_net:
@@ -49,8 +49,8 @@ services:
       - TZ=Europe/London
     volumes:
       - /home/mark/config/transmission:/config
-      - /media/download/complete:/downloads
-      - /media/download/watch:/watch
+      - /media/toshibaDrive/download/complete:/downloads
+      - /media/toshibaDrive/download/watch:/watch
     ports:
       - 9091:9091
       - 51413:51413
@@ -85,8 +85,8 @@ services:
       - UMASK_SET=002 #optional
     volumes:
       - /home/mark/config/radarr:/config
-      - /media/toshibaDrive/MOVIES:/movies
-      - /media/download/complete:/downloads
+      - /media/oldDisk/MOVIES:/movies
+      - /media/toshibaDrive/download/complete:/downloads
     ports:
       - 7878:7878
     restart: unless-stopped
@@ -104,7 +104,7 @@ services:
     volumes:
       - /home/mark/config/sonarr:/config
       - /media/toshibaDrive/TV:/tv
-      - /media/download/complete:/downloads
+      - /media/toshibaDrive/download/complete:/downloads
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -120,7 +120,7 @@ services:
     volumes:
       - /home/mark/config/mylar3:/config
       - /media/toshibaDrive/COMICS:/comics
-      - /media/download/complete:/downloads
+      - /media/toshibaDrive/download/complete:/downloads
     ports:
       - 8090:8090
     restart: unless-stopped
@@ -138,7 +138,7 @@ services:
     volumes:
       - /home/mark/config/readarr:/config
       - /media/toshibaDrive/eBooks:/EBOOKS
-      - /media/download/complete:/downloads
+      - /media/toshibaDrive/download/complete:/downloads
     ports:
       - 8787:8787
     restart: unless-stopped
@@ -156,7 +156,7 @@ services:
     volumes:
       - /home/mark/config/plex:/config
       - /media/toshibaDrive/TV:/data/tvshows
-      - /media/toshibaDrive/MOVIES:/data/movies
+      - /media/oldDisk/MOVIES:/data/movies
       - /media/transcode:/transcode
     restart: unless-stopped
 networks:
