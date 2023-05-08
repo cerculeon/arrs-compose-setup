@@ -9,12 +9,12 @@ services:
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - /home/mark/config/sabnzbd:/config
-      - /media/toshibaDrive/download/complete:/downloads
-      - /media/toshibaDrive/download/incomplete:/incomplete-downloads #optional
-      - /media/toshibaDrive/download/watch:/media/watch
-      - /media/toshibaDrive/TV:/media/TV
-      - /media/oldDisk/MOVIES/:/media/MOVIES
+      - ${CONFIG_ROOT}/sabnzbd:/config
+      - ${COMPLETE_DOWNLOADS}:/downloads
+      - ${INCOMPLETE_DOWNLOADS}:/incomplete-downloads #optional
+      - ${WATCH_FOLDER}:/media/watch
+      - ${TV_FOLDER}:/media/TV
+      - ${MOVIE_FOLDER}:/media/MOVIES
     ports:
       - 8088:8080
       - 9999:9090
@@ -32,8 +32,8 @@ services:
       - AUTO_UPDATE=true #optional
       #- RUN_OPTS= #optional
     volumes:
-      - /home/mark/config/jackett:/config
-      - /media/download/watch:/downloads #this might be the wrong place, it could possibly need downloads instead, trying this as a first pass
+      - ${CONFIG_ROOT}:/config
+      - ${WATCH_FOLDER}:/downloads #this might be the wrong place, it could possibly need downloads instead, trying this as a first pass
     ports:
       - 9117:9117
     restart: unless-stopped
@@ -48,9 +48,9 @@ services:
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - /home/mark/config/transmission:/config
-      - /media/toshibaDrive/download/complete:/downloads
-      - /media/toshibaDrive/download/watch:/watch
+      - ${CONFIG_ROOT}/transmission:/config
+      - ${COMPLETE_DOWNLOADS}:/downloads
+      - ${WATCH_FOLDER}:/watch
     ports:
       - 9091:9091
       - 51413:51413
@@ -68,7 +68,7 @@ services:
       - TZ=Europe/London
       - UMASK_SET=022
     volumes:
-      - /home/mark/config/prowlarr:/config
+      - ${CONFIG_ROOT}/prowlarr:/config
     ports:
       - 9696:9696
     restart: unless-stopped
@@ -84,9 +84,9 @@ services:
       - TZ=Europe/London
       - UMASK_SET=002 #optional
     volumes:
-      - /home/mark/config/radarr:/config
-      - /media/oldDisk/MOVIES:/movies
-      - /media/toshibaDrive/download/complete:/downloads
+      - ${CONFIG_ROOT}/radarr:/config
+      - ${MOVIE_FOLDER}:/movies
+      - ${COMPLETE_DOWNLOADS}:/downloads
     ports:
       - 7878:7878
     restart: unless-stopped
@@ -102,9 +102,9 @@ services:
       - TZ=Europe/London
       - UMASK_SET=002 #optional
     volumes:
-      - /home/mark/config/sonarr:/config
-      - /media/toshibaDrive/TV:/tv
-      - /media/toshibaDrive/download/complete:/downloads
+      - ${CONFIG_ROOT}/sonarr:/config
+      - ${TV_FOLDER}:/tv
+      - ${COMPLETE_DOWNLOADS}:/downloads
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -118,9 +118,9 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/mark/config/mylar3:/config
-      - /media/toshibaDrive/COMICS:/comics
-      - /media/toshibaDrive/download/complete:/downloads
+      - ${CONFIG_ROOT}/mylar3:/config
+      - ${COMIC_FOLDER}:/comics
+      - ${COMPLETE_DOWNLOADS}:/downloads
     ports:
       - 8090:8090
     restart: unless-stopped
@@ -136,9 +136,9 @@ services:
       - TZ=Europe/London
       - UMASK_SET=022
     volumes:
-      - /home/mark/config/readarr:/config
-      - /media/toshibaDrive/eBooks:/EBOOKS
-      - /media/toshibaDrive/download/complete:/downloads
+      - ${CONFIG_ROOT}/readarr:/config
+      - ${EBOOK_FOLDER}:/EBOOKS
+      - ${COMPLETE_DOWNLOADS}:/downloads
     ports:
       - 8787:8787
     restart: unless-stopped
@@ -154,9 +154,9 @@ services:
       - VERSION=docker
     network_mode: host
     volumes:
-      - /home/mark/config/plex:/config
-      - /media/toshibaDrive/TV:/data/tvshows
-      - /media/oldDisk/MOVIES:/data/movies
+      - ${CONFIG_ROOT}/plex:/config
+      - ${TV_FOLDER}:/data/tvshows
+      - ${MOVIE_FOLDER}:/data/movies
       - /media/transcode:/transcode
     restart: unless-stopped
 networks:
