@@ -14,7 +14,7 @@ services:
       - ${INCOMPLETE_DOWNLOADS}:/incomplete-downloads #optional
       - ${WATCH_FOLDER}:/media/watch
       - ${TV_FOLDER}:/media/TV
-      - ${MOVIE_FOLDER}:/media/MOVIES
+      - ${MOVIE_FOLDER}/:/media/MOVIES
     ports:
       - 8088:8080
       - 9999:9090
@@ -32,7 +32,7 @@ services:
       - AUTO_UPDATE=true #optional
       #- RUN_OPTS= #optional
     volumes:
-      - ${CONFIG_ROOT}:/config
+      - ${CONFIG_ROOT}/jackett:/config
       - ${WATCH_FOLDER}:/downloads #this might be the wrong place, it could possibly need downloads instead, trying this as a first pass
     ports:
       - 9117:9117
