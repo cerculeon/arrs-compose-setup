@@ -22,24 +22,6 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.1
-  jackett:
-    image: lscr.io/linuxserver/jackett:latest
-    container_name: jackett
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - AUTO_UPDATE=true #optional
-      #- RUN_OPTS= #optional
-    volumes:
-      - ${CONFIG_ROOT}/jackett:/config
-      - ${WATCH_FOLDER}:/downloads #this might be the wrong place, it could possibly need downloads instead, trying this as a first pass
-    ports:
-      - 9117:9117
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.2
   transmission:
     image: linuxserver/transmission:3.00-r5-ls137
     container_name: transmission
