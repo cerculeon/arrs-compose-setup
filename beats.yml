@@ -14,10 +14,6 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipam:
-          driver: default
-          config:
-            - subnet: 172.66.0.0/16
         ipv4_address: 172.66.1.11
 
   metricbeat:
@@ -37,15 +33,4 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipam:
-          driver: default
-          config:
-            - subnet: 172.66.0.0/16
         ipv4_address: 172.66.1.12
-
-networks:
-  htpc_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.66.0.0/16
