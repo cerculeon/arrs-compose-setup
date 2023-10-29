@@ -13,8 +13,12 @@ services:
       - ${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat
     restart: unless-stopped
     networks:
-      beats_net:
-        ipv4_address: 172.66.0.2
+      htpc_net:
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.66.0.0/16
+        ipv4_address: 172.66.1.11
 
   metricbeat:
     user: root
@@ -32,11 +36,15 @@ services:
       - ${CONFIG_ROOT}/metricbeat/modules.d:/usr/share/metricbeat/modules.d:ro
     restart: unless-stopped
     networks:
-      beats_net:
-        ipv4_address: 172.66.0.3
+      htpc_net:
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.66.0.0/16
+        ipv4_address: 172.66.1.12
 
 networks:
-  beats_net:
+  htpc_net:
     ipam:
       driver: default
       config:
