@@ -1,8 +1,43 @@
-version: "3.0" services: filebeat: user: root image: docker.elastic.co/beats/filebeat:7.14.0 hostname: fil_host container_name: filebeat volumes: - 
-      /var/lib/docker:/var/lib/docker:ro - /var/run/docker.sock:/var/run/docker.sock:ro - ${CONFIG_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml - 
-      ${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat
-    restart: unless-stopped networks: beats_net: ipv4_address: 172.66.0.2 metricbeat: user: root image: docker.elastic.co/beats/metricbeat:7.14.0 hostname: met_host 
-    container_name: metricbeat environment:
-      - setup.kibana.host=172.66.1.10:5601 volumes: - /var/run/docker.sock:/var/run/docker.sock:ro - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro - /proc:/hostfs/proc:ro - 
-      /:/hostfs:ro - ${CONFIG_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml - ${CONFIG_ROOT}/metricbeat/modules.d:/usr/share/metricbeat/modules.d:ro
-    restart: unless-stopped networks: beats_net: ipv4_address: 172.66.0.3 networks: beats_net: ipam: driver: default config: - subnet: 172.66.0.0/16
+version: "3.0"
+
+services:
+  filebeat:
+    user: root
+    image: docker.elastic.co/beats/filebeat:7.14.0
+    hostname: fil_host
+    container_name: filebeat
+    volumes:
+      - /var/lib/docker:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONFIG_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat
+    restart: unless-stopped
+    networks:
+      beats_net:
+        ipv4_address: 172.66.0.2
+
+  metricbeat:
+    user: root
+    image: docker.elastic.co/beats/metricbeat:7.14.0
+    hostname: met_host
+    container_name: metricbeat
+    environment:
+      - setup.kibana.host=172.66.1.10:5601
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+      - ${CONFIG_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml
+      - ${CONFIG_ROOT}/metricbeat/modules.d:/usr/share/metricbeat/modules.d:ro
+    restart: unless-stopped
+    networks:
+      beats_net:
+        ipv4_address: 172.66.0.3
+
+networks:
+  beats_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.66.0.0/16
