@@ -146,9 +146,43 @@ services:
     volumes:
       - ${CONFIG_ROOT}/plex:/config
       - ${TV_FOLDER}:/data/tvshows
+  
+  filebeat:
+    user: root
+    image: docker.elastic.co/beats/filebeat:5.6.0
+    hostname: fil_host
+    container_name: filebeat
+    volumes:
+      - /var/lib/docker:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONFIG_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.9
+        
+  metricbeat:
+    user: root
+    image: docker.elastic.co/beats/metricbeat:5.6.0
+    hostname: met_host
+    container_name: metricbeat
+    environment:
+      - setup.kibana.host=192.168.1.29:5601
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+      - ${CONFIG_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml
+      - ${CONFIG_ROOT}/metricbeat/modules.d:/usr/share/metricbeat/modules.d:ro
+    restart: unless-stopped
       - ${MOVIE_FOLDER}:/data/movies
       - /media/transcode:/transcode
     restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.10
 networks:
   htpc_net:
     ipam:
