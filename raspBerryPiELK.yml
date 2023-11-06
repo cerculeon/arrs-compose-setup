@@ -10,7 +10,7 @@ services:
       - bootstrap.memory_lock=true
       - ES_JAVA_OPTS=-Xms256m -Xmx256m
       - network.bind_host=0.0.0.0
-      - network.publish_host=192.168.1.4
+      - network.publish_host=${BEATS_HOST}
       - http.cors.enabled=true
       - http.cors.allow-origin=*
     ulimits:
