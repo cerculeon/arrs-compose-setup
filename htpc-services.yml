@@ -165,7 +165,7 @@ services:
     hostname: met_host
     container_name: metricbeat
     environment:
-      - 'setup.kibana.host=192.168.1.29:5601'
+      - 'setup.kibana.host=${KIBANA_HOST_IP}:5601'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
       - '/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro'
