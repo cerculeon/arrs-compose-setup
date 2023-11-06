@@ -11,10 +11,14 @@ services:
       - ES_JAVA_OPTS=-Xms256m -Xmx256m
       - network.bind_host=0.0.0.0
 <<<<<<< HEAD
+<<<<<<< HEAD
       - network.publish_host=${BEATS_HOST}
 =======
       - network.publish_host=192.168.1.4
 >>>>>>> 0c21d3a (working pi elastic and kibana)
+=======
+      - network.publish_host=${BEATS_HOST}
+>>>>>>> 396610f (added variable for beats host)
       - http.cors.enabled=true
       - http.cors.allow-origin=*
     ulimits:
