@@ -25,6 +25,7 @@ services:
     restart: unless-stopped
     networks:
       - esnet
+
   kibana:
     image: 'ind3x/rpi-kibana'
     container_name: kibana
@@ -37,9 +38,26 @@ services:
       - esnet
     depends_on:
       - elasticsearch
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    command: -H tcp://192.168.1.4:2375  # Connect to the remote Docker instance
+    ports:
+      - '9000:9000'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'  # Required to access Docker API
+    restart: unless-stopped
+    networks:
+      - esnet
+    depends_on:
+      - elasticsearch
+
 networks:
   esnet:
     driver: bridge
+
 volumes:
   esdata:
     driver: local
+
