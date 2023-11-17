@@ -42,9 +42,9 @@ services:
   portainer:
     image: portainer/portainer
     container_name: portainer
-    command: -H tcp://192.168.1.4:2375  # Connect to the remote Docker instance
+    command: -H tcp://${BEATS_HOST}:2375  # Connect to the remote Docker instance
     ports:
-      - '9000:9000'
+      - '9191:9000'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'  # Required to access Docker API
     restart: unless-stopped
