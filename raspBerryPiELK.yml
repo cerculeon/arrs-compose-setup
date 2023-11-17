@@ -12,6 +12,7 @@ services:
       - network.bind_host=0.0.0.0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - network.publish_host=${BEATS_HOST}
 =======
       - network.publish_host=192.168.1.4
@@ -19,6 +20,9 @@ services:
 =======
       - network.publish_host=${BEATS_HOST}
 >>>>>>> 396610f (added variable for beats host)
+=======
+      - network.publish_host=${BEATS_HOST}
+>>>>>>> external_elk_cluster
       - http.cors.enabled=true
       - http.cors.allow-origin=*
     ulimits:
@@ -34,9 +38,12 @@ services:
     networks:
       - esnet
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 0c21d3a (working pi elastic and kibana)
+=======
+>>>>>>> external_elk_cluster
   kibana:
     image: 'ind3x/rpi-kibana'
     container_name: kibana
@@ -49,6 +56,7 @@ services:
       - esnet
     depends_on:
       - elasticsearch
+<<<<<<< HEAD
 <<<<<<< HEAD
 
   portainer:
@@ -74,10 +82,15 @@ volumes:
     driver: local
 
 =======
+=======
+>>>>>>> external_elk_cluster
 networks:
   esnet:
     driver: bridge
 volumes:
   esdata:
     driver: local
+<<<<<<< HEAD
 >>>>>>> 0c21d3a (working pi elastic and kibana)
+=======
+>>>>>>> external_elk_cluster

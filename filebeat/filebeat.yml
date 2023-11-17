@@ -1,0 +1,13 @@
+filebeat.prospectors:
+  - type: log
+    enabled: true
+    paths:
+      - "/var/lib/docker/containers/*/*.log"
+
+output.elasticsearch:
+  hosts: ["192.168.1.29:9200"]
+  index: "filebeat-%{+yyyy.MM.dd}"
+
+setup.template.name: "filebeat"
+setup.template.pattern: "filebeat-*"
+
