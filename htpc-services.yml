@@ -1,4 +1,4 @@
-version: '3.0'
+0version: '3.0'
 services:
   sabnzbd:
     image: linuxserver/sabnzbd
@@ -180,6 +180,24 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.10
+  tautulli:
+    image: tautulli/tautulli
+    hostname: tau_host
+    container_name: tautulli
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/tautulli:/config'
+      - '${LOGS_FOLDER}/plex:/logs:ro'
+    ports:
+      - '8181:8181'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.11
+
 networks:
   htpc_net:
     ipam:
