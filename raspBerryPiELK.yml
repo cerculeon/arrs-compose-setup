@@ -11,7 +11,6 @@ services:
       - ES_JAVA_OPTS=-Xms256m -Xmx256m
       - network.bind_host=0.0.0.0
       - network.publish_host=${BEATS_HOST}
-      - network.publish_host=192.168.1.4
       - http.cors.enabled=true
       - http.cors.allow-origin=*
     ulimits:
@@ -57,12 +56,6 @@ networks:
   esnet:
     driver: bridge
 
-volumes:
-  esdata:
-    driver: local
-networks:
-  esnet:
-    driver: bridge
 volumes:
   esdata:
     driver: local
