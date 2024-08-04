@@ -198,7 +198,27 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.11
-
+        
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ${CONFIG_ROOT}/jellyfin:/config
+      - ${TV_FOLDER}:/data/tvshows
+      - ${MOVIE_FOLDER}:/data/movies
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.12
 networks:
   htpc_net:
     ipam:
