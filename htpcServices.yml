@@ -210,6 +210,7 @@ services:
       - ${CONFIG_ROOT}/jellyfin:/config
       - ${TV_FOLDER}:/data/tvshows
       - ${MOVIE_FOLDER}:/data/movies
+      - ${CONFIG_ROOT}/jellyfin/plugins:/plugins
     ports:
       - 8096:8096
       - 8920:8920 #optional
