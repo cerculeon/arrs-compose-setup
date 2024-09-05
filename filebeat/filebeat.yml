@@ -1,5 +1,5 @@
 filebeat:
-  prospectors:
+  inputs:
     - type: log
       paths:
         - /var/lib/docker/containers/*/*.log
@@ -15,8 +15,7 @@ filebeat:
       fields_under_root: true
       processors:
         - add_docker_metadata: ~
+        
+output.elasticsearch:
+  hosts: ["http://192.168.4.103:9200"]
 
-output:
-  elasticsearch:
-    hosts: ["http://192.168.4.117:9200"]
-#test
