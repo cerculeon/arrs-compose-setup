@@ -1,13 +1,22 @@
-filebeat.prospectors:
-  - type: log
-    enabled: true
-    paths:
-      - "/var/lib/docker/containers/*/*.log"
+filebeat:
+  prospectors:
+    - type: log
+      paths:
+        - /var/lib/docker/containers/*/*.log
+      json.message_key: log
+      json.keys_under_root: true
+      json.add_error_key: true
+      multiline:
+        pattern: '^{"'
+        negate: true
+        match: after
+      fields:
+        log_source: docker
+      fields_under_root: true
+      processors:
+        - add_docker_metadata: ~
 
-output.elasticsearch:
-  hosts: ["192.168.1.29:9200"]
-  index: "filebeat-%{+yyyy.MM.dd}"
-
-setup.template.name: "filebeat"
-setup.template.pattern: "filebeat-*"
-
+output:
+  elasticsearch:
+    hosts: ["http://192.168.4.117:9200"]
+#test
