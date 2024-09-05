@@ -1,20 +1,17 @@
 version: '3'
 services:
   elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.10.2-arm64'
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.17.7-arm64'
     container_name: elasticsearch
     environment:
-      - ES_JAVA_OPTS="-Des.index.number_of_replicas=0"
       - discovery.type=single-node
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - network.bind_host=0.0.0.0
+      - network.host=0.0.0.0
       - network.publish_host=${BEATS_HOST}
       - http.cors.enabled=true
       - http.cors.allow-origin=*
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" 
-      - "index.number_of_shards=1" 
-      - "index.number_of_replicas=1"
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m 
     ulimits:
       memlock:
         soft: -1
@@ -27,8 +24,9 @@ services:
     restart: unless-stopped
     networks:
       - esnet
+
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.10.2-arm64'
+    image: 'docker.elastic.co/kibana/kibana:7.17.7-arm64'
     container_name: kibana
     environment:
       - 'ELASTICSEARCH_HOSTS=http://elasticsearch:9200'
