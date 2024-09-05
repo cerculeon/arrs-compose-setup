@@ -1,7 +1,7 @@
 version: '3'
 services:
   elasticsearch:
-    image: 'ind3x/rpi-elasticsearch'
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.10.2-arm64'
     container_name: elasticsearch
     environment:
       - ES_JAVA_OPTS="-Des.index.number_of_replicas=0"
@@ -28,7 +28,7 @@ services:
     networks:
       - esnet
   kibana:
-    image: 'ind3x/rpi-kibana'
+    image: 'docker.elastic.co/kibana/kibana:7.10.2-arm64'
     container_name: kibana
     environment:
       - 'ELASTICSEARCH_HOSTS=http://elasticsearch:9200'
