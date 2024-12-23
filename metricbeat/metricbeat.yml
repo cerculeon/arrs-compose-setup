@@ -13,5 +13,9 @@ metricbeat.modules:
   period: 10s
   enabled: true
 
+setup.kibana:
+  host: "http://192.168.4.119:5601"
+
+
 output.elasticsearch:
-  hosts: ["192.168.4.103:9200"]
+  hosts: ["192.168.4.119:9200"]
