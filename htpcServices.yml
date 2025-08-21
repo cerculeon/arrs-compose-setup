@@ -113,6 +113,25 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.7
+  readarr:
+    image: linuxserver/readarr:0:4.19-nightly
+    hostname: rea_host
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - '${CONFIG_ROOT}/readarr:/config'
+      - '${EBOOK_FOLDER}:/EBOOKS'
+      - '${COMPLETE_DOWNLOADS}:/downloads'
+    ports:
+      - '8787:8787'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.8
   plex:
     image: linuxserver/plex
     hostname: ple_host
