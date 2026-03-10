@@ -25,6 +25,7 @@ The repository is designed for self-hosted environments and can be adapted to yo
 - [Contributing](#contributing)
 - [Roadmap Ideas](#roadmap-ideas)
 - [License](#license)
+- [Security](#security)
 
 ## What This Repo Provides
 
@@ -105,6 +106,7 @@ Optional but recommended:
 2. Copy and customize env files:
 	- [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env)
 	- [OBSERVER/OBSERVER_envValues.env](OBSERVER/OBSERVER_envValues.env)
+	- Optional templates: [HTPC/HTPC_envValues.env.example](HTPC/HTPC_envValues.env.example) and [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_envValues.env.example)
 3. Validate configuration (without starting containers):
 
 ```bash
@@ -151,6 +153,8 @@ Defined in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env):
 
 Update these to your filesystem and network.
 
+You can start from [HTPC/HTPC_envValues.env.example](HTPC/HTPC_envValues.env.example).
+
 ### Observer Env Variables
 
 Defined in [OBSERVER/OBSERVER_envValues.env](OBSERVER/OBSERVER_envValues.env):
@@ -158,6 +162,8 @@ Defined in [OBSERVER/OBSERVER_envValues.env](OBSERVER/OBSERVER_envValues.env):
 - CONFIG_ROOT
 - KIBANA_HOST_IP
 - BEATS_HOST
+
+You can start from [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_envValues.env.example).
 
 ### Beats Config
 
@@ -261,6 +267,10 @@ docker logs metricbeat
 
 Contributions are welcome.
 
+Please review [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+
+This project follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
 ### How to contribute
 
 1. Fork the repository.
@@ -294,3 +304,7 @@ Contributions are welcome.
 This project is licensed under the MIT License.
 
 See [LICENSE](LICENSE) for the full text.
+
+## Security
+
+For vulnerability reporting and security guidance, see [SECURITY.md](SECURITY.md).
