@@ -1,5 +1,8 @@
 # HTPC Config
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 Docker Compose based Home Theater PC stack with optional observability services.
 
 This repository contains two related stacks:
@@ -106,7 +109,7 @@ Optional but recommended:
 2. Copy and customize env files:
 	- [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env)
 	- [OBSERVER/OBSERVER_envValues.env](OBSERVER/OBSERVER_envValues.env)
-	- Optional templates: [HTPC/HTPC_envValues.env.example](HTPC/HTPC_envValues.env.example) and [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_envValues.env.example)
+	- Use the provided templates: [HTPC/HTPC_envValues.env.example](HTPC/HTPC_envValues.env.example) and [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_envValues.env.example) removing the .example
 3. Validate configuration (without starting containers):
 
 ```bash
