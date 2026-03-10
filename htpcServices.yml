@@ -114,7 +114,7 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.7
   readarr:
-    image: linuxserver/readarr:0:4.19-nightly
+    image: linuxserver/readarr:0.4.19-nightly
     hostname: rea_host
     container_name: readarr
     environment:
@@ -235,6 +235,27 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.13
+  emby:
+    image: emby/embyserver:latest
+    hostname: emby_host
+    container_name: emby
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ${CONFIG_ROOT}/emby:/config
+      - ${TV_FOLDER}:/data/tvshows
+      - ${MOVIE_FOLDER}:/data/movies
+      - ${CONFIG_ROOT}/emby/plugins:/plugins
+    ports:
+      - 8099:8096
+      - 8922:8920 #optional (https)
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.14
+
     
 networks:
   htpc_net:
