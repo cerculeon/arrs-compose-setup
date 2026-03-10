@@ -118,6 +118,7 @@ Optional but recommended:
 ```
 
 4. Start stacks:
+ Note:  you may need to run as root depending on your docker setup. if you get "permission denied while trying to connect to the docker API" then you should rerun as the root user
 
 ```bash
 ./runHTPCStack.sh yes
