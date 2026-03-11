@@ -1,0 +1,29 @@
+name: Compose Validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Docker and Compose versions
+        run: |
+          docker --version
+          docker compose version
+
+      - name: Prepare env files from examples
+        run: |
+          cp HTPC/HTPC_envValues.env.example HTPC/HTPC_envValues.env
+          cp OBSERVER/OBSERVER_envValues.env.example OBSERVER/OBSERVER_envValues.env
+
+      - name: Validate HTPC compose config
+        run: docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env config
+
+      - name: Validate Observer compose config
+        run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env config
