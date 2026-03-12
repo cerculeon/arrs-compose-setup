@@ -64,10 +64,10 @@ jobs:
       - name: Validate Observer compose config
         run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env config
 
-      - name: Validate HTPC build
+      - name: Test Build - pull HTPC images
         if: ${{ inputs.test_build || github.event_name == 'push' }}
-        run: docker compose --progress=plain -f htpcServices.yml --env-file HTPC/HTPC_envValues.env build
+        run: docker compose --progress=plain -f htpcServices.yml --env-file HTPC/HTPC_envValues.env pull
 
-      - name: Validate Observer build
+      - name: Test Build - pull Observer images
         if: ${{ inputs.test_build || github.event_name == 'push' }}
-        run: docker compose --progress=plain -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env build
+        run: docker compose --progress=plain -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env pull
