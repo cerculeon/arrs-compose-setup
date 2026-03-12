@@ -38,8 +38,8 @@ jobs:
 
       - name: Validate HTPC build
         if: ${{ inputs.test_build || github.event_name == 'push' }}
-        run: docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env build
+        run: docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env build --progress=plain
 
       - name: Validate Observer build
         if: ${{ inputs.test_build || github.event_name == 'push' }}
-        run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env build
+        run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env build --progress=plain
