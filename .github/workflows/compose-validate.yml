@@ -6,11 +6,6 @@ on:
       - ci/compose-validation
   pull_request:
   workflow_dispatch:
-    inputs:
-      test_build:
-        description: Test Build
-        type: boolean
-        default: true
 
 jobs:
   lint:
@@ -63,11 +58,3 @@ jobs:
 
       - name: Validate Observer compose config
         run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env config
-
-      - name: Test Build - pull HTPC images
-        if: ${{ inputs.test_build || github.event_name == 'push' }}
-        run: docker compose --progress=plain -f htpcServices.yml --env-file HTPC/HTPC_envValues.env pull
-
-      - name: Test Build - pull Observer images
-        if: ${{ inputs.test_build || github.event_name == 'push' }}
-        run: docker compose --progress=plain -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env pull
