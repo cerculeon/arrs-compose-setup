@@ -1,9 +1,6 @@
 name: Compose Validation
 
 on:
-  push:
-    branches:
-      - ci/compose-validation
   pull_request:
   workflow_dispatch:
 
