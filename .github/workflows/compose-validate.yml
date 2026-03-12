@@ -3,6 +3,11 @@ name: Compose Validation
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      test_build:
+        description: Test Build
+        type: boolean
+        default: false
 
 jobs:
   validate:
@@ -27,3 +32,11 @@ jobs:
 
       - name: Validate Observer compose config
         run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env config
+
+      - name: Validate HTPC build
+        if: ${{ inputs.test_build }}
+        run: docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env build
+
+      - name: Validate Observer build
+        if: ${{ inputs.test_build }}
+        run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env build
