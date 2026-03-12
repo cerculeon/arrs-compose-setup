@@ -63,3 +63,6 @@ jobs:
 
       - name: Validate Observer compose config
         run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env config
+
+      - name: Validate HTPC build
+        run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env build
