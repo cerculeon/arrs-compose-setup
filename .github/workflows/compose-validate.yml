@@ -3,6 +3,11 @@ name: Compose Validation
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      test_build:
+        description: Test Build
+        type: boolean
+        default: false
 
 jobs:
   lint:
