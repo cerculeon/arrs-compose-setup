@@ -14,8 +14,10 @@ metricbeat.modules:
   enabled: true
 
 setup.kibana:
+  # CHANGE THIS: replace 192.168.4.103 with the IP of your Kibana host
   host: "http://192.168.4.103:5601"
 
 
 output.elasticsearch:
+  # CHANGE THIS: replace 192.168.4.103 with the IP of your Elasticsearch host
   hosts: ["192.168.4.103:9200"]

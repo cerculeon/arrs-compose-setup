@@ -175,10 +175,13 @@ You can start from [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_e
 - Metricbeat config: [metricbeat/metricbeat.yml](metricbeat/metricbeat.yml)
 - Metricbeat Docker module: [metricbeat/modules.d/docker.yml](metricbeat/modules.d/docker.yml)
 
-Important:
+> **Important:** Both Beats config files contain hardcoded IP addresses that must be changed before the stack will work.
+> Each address is marked with a `# CHANGE THIS` comment directly in the file.
+> Search for `CHANGE THIS` in [filebeat/filebeat.yml](filebeat/filebeat.yml) and [metricbeat/metricbeat.yml](metricbeat/metricbeat.yml) and replace the IPs with those of your own Elasticsearch and Kibana hosts.
 
-- The HTPC compose file currently mounts Beats config from an absolute path under /home/mark/htpc-config.
-- For portability, update these paths/IPs for your environment.
+Additional notes:
+
+- The HTPC compose file currently mounts Beats config from an absolute path under /home/mark/htpc-config. Search for `CHANGE THIS` in [htpcServices.yml](htpcServices.yml) and update those paths to your own clone location.
 
 ## Running the Stacks
 
