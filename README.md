@@ -181,7 +181,7 @@ You can start from [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_e
 
 Additional notes:
 
-- The HTPC compose file currently mounts Beats config from an absolute path under /home/mark/htpc-config. Search for `CHANGE THIS` in [htpcServices.yml](htpcServices.yml) and update those paths to your own clone location.
+- The Beats config volume mounts use `${HTPC_DOCKER_COMPOSE_ROOT}` to locate config files. Set this variable in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env) to the absolute path of your local clone.
 
 ## Running the Stacks
 
