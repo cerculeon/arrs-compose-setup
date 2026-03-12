@@ -10,7 +10,7 @@ on:
       test_build:
         description: Test Build
         type: boolean
-        default: false
+        default: true
 
 jobs:
   validate:
