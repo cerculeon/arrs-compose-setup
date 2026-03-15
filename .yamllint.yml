@@ -1,0 +1,8 @@
+---
+extends: default
+rules:
+  line-length:
+    max: 200
+  truthy: disable
+  new-lines:
+    type: platform

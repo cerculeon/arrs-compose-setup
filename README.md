@@ -57,7 +57,7 @@ The observability stack in [observabilityServices.yml](observabilityServices.yml
 
 ## Repository Layout
 
-```
+```text
 .
 ├── htpcServices.yml
 ├── observabilityServices.yml
@@ -107,9 +107,9 @@ Optional but recommended:
 
 1. Clone the repo.
 2. Copy and customize env files:
-	- [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env)
-	- [OBSERVER/OBSERVER_envValues.env](OBSERVER/OBSERVER_envValues.env)
-	- Use the provided templates: [HTPC/HTPC_envValues.env.example](HTPC/HTPC_envValues.env.example) and [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_envValues.env.example) removing the .example
+    - [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env)
+    - [OBSERVER/OBSERVER_envValues.env](OBSERVER/OBSERVER_envValues.env)
+    - Use the provided templates: [HTPC/HTPC_envValues.env.example](HTPC/HTPC_envValues.env.example) and [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_envValues.env.example) removing the .example
 3. Validate configuration (without starting containers):
 
 ```bash
@@ -126,13 +126,13 @@ Optional but recommended:
 ```
 
 5. Open service UIs (examples):
-	- Sonarr: http://<host>:8989
-	- Radarr: http://<host>:7878
-	- Prowlarr: http://<host>:9696
-	- SABnzbd: http://<host>:8088
-	- Transmission: http://<host>:9091
-	- Jellyfin: http://<host>:8096
-	- Emby: http://<host>:8099
+    - Sonarr: http://<host>:8989
+    - Radarr: http://<host>:7878
+    - Prowlarr: http://<host>:9696
+    - SABnzbd: http://<host>:8088
+    - Transmission: http://<host>:9091
+    - Jellyfin: http://<host>:8096
+    - Emby: http://<host>:8099
 
 6. Fix Beats config file ownership (required or Beats containers will exit on start):
 
@@ -145,9 +145,9 @@ docker restart filebeat metricbeat
 ```
 
 See [Beats config file ownership error](#beats-config-file-ownership-error) in Troubleshooting if the containers still fail to start.
-	- Kibana: http://<observer-host>:5601
-	- Elasticsearch API: http://<observer-host>:9200
-	- Portainer: http://<observer-host>:9191
+    - Kibana: http://<observer-host>:5601
+    - Elasticsearch API: http://<observer-host>:9200
+    - Portainer: http://<observer-host>:9191
 
 ## Configuration
 
@@ -274,7 +274,7 @@ docker logs metricbeat
 
 If `filebeat` or `metricbeat` exits immediately and you see an error such as:
 
-```
+```text
 Exiting: error loading config file: config file ("filebeat.yml") must be owned by the user identifier (uid=0) or root
 ```
 
@@ -319,9 +319,9 @@ This project follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 3. Make focused changes with clear commit messages.
 4. Validate with compose config checks.
 5. Open a pull request with:
-	- What changed
-	- Why it changed
-	- Any migration steps
+    - What changed
+    - Why it changed
+    - Any migration steps
 
 ### Recommended contribution areas
 
