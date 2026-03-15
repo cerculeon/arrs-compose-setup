@@ -155,8 +155,8 @@ services:
     volumes:
       - '/var/lib/docker:/var/lib/docker:ro'
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - '/home/mark/htpc-config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
-      - '/home/mark/htpc-config/filebeat/modules.d:/usr/share/filebeat/modules.d'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/modules.d:/usr/share/filebeat/modules.d'
       - '${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat'
     restart: unless-stopped
     networks:
@@ -175,7 +175,7 @@ services:
       - '/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro'
       - '/proc:/hostfs/proc:ro'
       - '/:/hostfs:ro'
-      - '/home/mark/htpc-config/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml'
     restart: unless-stopped
     networks:
       htpc_net:

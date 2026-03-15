@@ -133,6 +133,18 @@ Optional but recommended:
 	- Transmission: http://<host>:9091
 	- Jellyfin: http://<host>:8096
 	- Emby: http://<host>:8099
+
+6. Fix Beats config file ownership (required or Beats containers will exit on start):
+
+```bash
+sudo chown root:root filebeat/filebeat.yml
+sudo chown root:root metricbeat/metricbeat.yml
+sudo chmod go-w filebeat/filebeat.yml
+sudo chmod go-w metricbeat/metricbeat.yml
+docker restart filebeat metricbeat
+```
+
+See [Beats config file ownership error](#beats-config-file-ownership-error) in Troubleshooting if the containers still fail to start.
 	- Kibana: http://<observer-host>:5601
 	- Elasticsearch API: http://<observer-host>:9200
 	- Portainer: http://<observer-host>:9191
@@ -175,10 +187,13 @@ You can start from [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_e
 - Metricbeat config: [metricbeat/metricbeat.yml](metricbeat/metricbeat.yml)
 - Metricbeat Docker module: [metricbeat/modules.d/docker.yml](metricbeat/modules.d/docker.yml)
 
-Important:
+> **Important:** Both Beats config files contain hardcoded IP addresses that must be changed before the stack will work.
+> Each address is marked with a `# CHANGE THIS` comment directly in the file.
+> Search for `CHANGE THIS` in [filebeat/filebeat.yml](filebeat/filebeat.yml) and [metricbeat/metricbeat.yml](metricbeat/metricbeat.yml) and replace the IPs with those of your own Elasticsearch and Kibana hosts.
 
-- The HTPC compose file currently mounts Beats config from an absolute path under /home/mark/htpc-config.
-- For portability, update these paths/IPs for your environment.
+Additional notes:
+
+- The Beats config volume mounts use `${HTPC_DOCKER_COMPOSE_ROOT}` to locate config files. Set this variable in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env) to the absolute path of your local clone.
 
 ## Running the Stacks
 
@@ -255,6 +270,28 @@ docker logs filebeat
 docker logs metricbeat
 ```
 
+### Beats config file ownership error
+
+If `filebeat` or `metricbeat` exits immediately and you see an error such as:
+
+```
+Exiting: error loading config file: config file ("filebeat.yml") must be owned by the user identifier (uid=0) or root
+```
+
+Docker Compose mounts the config files from the host filesystem. Beats requires these files to be owned by root with no group/other write permissions.
+
+Fix (run from the root of the repo on the HTPC host):
+
+```bash
+sudo chown root:root filebeat/filebeat.yml
+sudo chown root:root metricbeat/metricbeat.yml
+sudo chmod go-w filebeat/filebeat.yml
+sudo chmod go-w metricbeat/metricbeat.yml
+docker restart filebeat metricbeat
+```
+
+This is a one-time step after initial setup, or after any pull that modifies those files. See step 6 of [Quick Start](#quick-start).
+
 ### Network and static IP issues
 
 - The HTPC stack uses static IP assignments in 172.66.0.0/16.
@@ -291,9 +328,7 @@ This project follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 - Improve portability of absolute host paths
 - Unify docker compose vs docker-compose usage
 - Add cross-platform scripts (PowerShell + Bash)
-- Add env example templates
 - Add healthchecks and startup dependencies where appropriate
-- Add CI checks for compose validation and linting
 
 ## Roadmap Ideas
 
