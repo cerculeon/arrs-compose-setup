@@ -155,8 +155,8 @@ services:
     volumes:
       - '/var/lib/docker:/var/lib/docker:ro'
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - '/home/mark/arrs-compose-setup/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
-      - '/home/mark/arrs-compose-setup/filebeat/modules.d:/usr/share/filebeat/modules.d'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/modules.d:/usr/share/filebeat/modules.d'
       - '${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat'
     restart: unless-stopped
     networks:
@@ -169,13 +169,13 @@ services:
     container_name: metricbeat
     environment:
       - 'setup.kibana.host=${KIBANA_HOST}:5601'
-      -  ELASTICSEARCH_HOSTS=http://${KIBANA_HOST}:9200
+      - ELASTICSEARCH_HOSTS=http://${KIBANA_HOST}:9200
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
       - '/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro'
       - '/proc:/hostfs/proc:ro'
       - '/:/hostfs:ro'
-      - '/home/mark/arrs-compose-setup/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml'
     restart: unless-stopped
     networks:
       htpc_net:
@@ -196,7 +196,7 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.11
-        
+
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     hostname: jel_host
@@ -212,9 +212,9 @@ services:
       - ${CONFIG_ROOT}/jellyfin/plugins:/plugins
     ports:
       - 8096:8096
-      - 8920:8920 #optional
-      - 7359:7359/udp #optional
-      - 1900:1900/udp #optional
+      - 8920:8920  # optional
+      - 7359:7359/udp  # optional
+      - 1900:1900/udp  # optional
     restart: unless-stopped
     networks:
       htpc_net:
@@ -250,13 +250,13 @@ services:
       - ${CONFIG_ROOT}/emby/plugins:/plugins
     ports:
       - 8099:8096
-      - 8922:8920 #optional (https)
+      - 8922:8920  # optional (https)
     restart: unless-stopped
     networks:
       htpc_net:
         ipv4_address: 172.66.1.14
 
-    
+
 networks:
   htpc_net:
     ipam:

@@ -1,0 +1,57 @@
+name: Compose Validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install linters
+        run: |
+          pip install yamllint
+          npm install -g markdownlint-cli
+
+      - name: Lint YAML files
+        run: |
+          yamllint -c .yamllint.yml \
+            htpcServices.yml \
+            observabilityServices.yml \
+            filebeat/filebeat.yml \
+            metricbeat/metricbeat.yml \
+            metricbeat/modules.d/docker.yml \
+            .github/workflows/compose-validate.yml
+
+      - name: Lint shell scripts
+        run: shellcheck runHTPCStack.sh runObserverStack.sh
+
+      - name: Lint Markdown
+        run: markdownlint '**/*.md' --ignore node_modules
+
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Docker and Compose versions
+        run: |
+          docker --version
+          docker compose version
+
+      - name: Prepare env files from examples
+        run: |
+          cp HTPC/HTPC_envValues.env.example HTPC/HTPC_envValues.env
+          cp OBSERVER/OBSERVER_envValues.env.example OBSERVER/OBSERVER_envValues.env
+
+      - name: Validate HTPC compose config
+        run: docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env config
+
+      - name: Validate Observer compose config
+        run: docker compose -f observabilityServices.yml --env-file OBSERVER/OBSERVER_envValues.env config
