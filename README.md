@@ -177,7 +177,7 @@ You can start from [OBSERVER/OBSERVER_envValues.env.example](OBSERVER/OBSERVER_e
 
 Important:
 
-- The HTPC compose file currently mounts Beats config from an absolute path under /home/mark/htpc-config.
+- The HTPC compose file currently mounts Beats config from an absolute path under /home/mark/arrs-compose-setup.
 - For portability, update these paths/IPs for your environment.
 
 ## Running the Stacks
