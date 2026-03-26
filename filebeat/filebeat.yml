@@ -26,11 +26,7 @@ setup.ilm.overwrite: true
 setup.ilm.policy_name: "filebeat-new-policy"
 setup.ilm.rollover_alias: "filebeat-new"
 setup.ilm.pattern: '{now/d}-000001'
-
-setup.template.settings:
-  index.number_of_shards: 1
-  index.codec: best_compression
-  _source.enabled: true
+setup.ilm.policy_file: "/usr/share/filebeat/filebeat-ilm.json"
 
 setup.template.mappings:
   properties:

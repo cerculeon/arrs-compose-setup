@@ -157,6 +157,7 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
       - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
       - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/modules.d:/usr/share/filebeat/modules.d'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat-ilm.json:/usr/share/filebeat/filebeat-ilm.json:ro'  
       - '${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat'
     restart: unless-stopped
     networks:

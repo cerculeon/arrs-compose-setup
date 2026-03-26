@@ -13,11 +13,19 @@ metricbeat.modules:
     period: 10s
     enabled: true
 
+setup.ilm.enabled: true
+setup.ilm.policy_name: "metricbeat"
+setup.ilm.overwrite: true
+
+setup.template.enabled: true
+setup.template.overwrite: true
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+
 setup.kibana:
-  # CHANGE THIS: replace 192.168.4.103 with the IP of your Kibana host
   host: "http://192.168.4.103:5601"
 
-
 output.elasticsearch:
-  # CHANGE THIS: replace 192.168.4.103 with the IP of your Elasticsearch host
   hosts: ["192.168.4.103:9200"]
+
