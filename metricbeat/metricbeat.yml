@@ -44,3 +44,4 @@ setup.ilm.policy_file: "/usr/share/metricbeat/metricbeat-ilm.json"
 
 output.elasticsearch:
   hosts: ["http://192.168.4.103:9200"]
+>>>>>>> eb26413 (Update metricbeat.yml with ILM rollover and delete policy)
