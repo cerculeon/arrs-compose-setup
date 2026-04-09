@@ -28,4 +28,21 @@ setup.kibana:
 
 output.elasticsearch:
   hosts: ["192.168.4.103:9200"]
+  index: "metricbeat-%{[agent.version]}"
 
+setup.template.name: "metricbeat-%{[agent.version]}"
+setup.template.pattern: "metricbeat-%{[agent.version]}-*"
+setup.template.enabled: true
+setup.ilm.enabled: true
+setup.ilm.overwrite: true
+setup.ilm.policy_name: "metricbeat"
+setup.ilm.rollover_alias: "metricbeat-%{[agent.version]}"
+setup.ilm.pattern: '{now/d}-000001'
+# ILM policy configured to rollover at 1GB or 1 day, and delete old indices after 3 days.
+# This prevents large single indices from filling disk on resource-constrained hosts
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+  _source.enabled: true
+>>>>>>> 918ec49 (Update metricbeat.yml with ILM rollover and delete policy)
