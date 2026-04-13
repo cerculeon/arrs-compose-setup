@@ -14,12 +14,13 @@ metricbeat.modules:
     period: 10s
     enabled: true
 
-setup.ilm.enabled: true
-setup.ilm.policy_name: "metricbeat"
-setup.ilm.overwrite: true
+setup.kibana:
+  host: "http://192.168.4.103:5601"
 
 setup.template.enabled: true
 setup.template.overwrite: true
+setup.template.name: "metricbeat-7.17.7"
+setup.template.pattern: "metricbeat-7.17.7-*"
 setup.template.settings:
   index.number_of_shards: 1
   index.number_of_replicas: 0
