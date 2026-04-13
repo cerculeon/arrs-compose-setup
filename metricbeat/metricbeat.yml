@@ -1,3 +1,4 @@
+---
 metricbeat.modules:
   - module: docker
     metricsets:
