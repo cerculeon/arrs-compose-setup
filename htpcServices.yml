@@ -260,16 +260,16 @@ services:
         ipv4_address: 172.66.1.14
 
 
-  overseerr:
-    image: sctx/overseerr:latest
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
     hostname: seerr_host
-    container_name: overseerr
+    container_name: jellyseerr
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - '${CONFIG_ROOT}/overseerr:/app/config'
+      - '${CONFIG_ROOT}/jellyseerr:/app/config'
     ports:
       - '5055:5055'
     restart: unless-stopped
