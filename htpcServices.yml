@@ -177,6 +177,7 @@ services:
       - '/proc:/hostfs/proc:ro'
       - '/:/hostfs:ro'
       - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat-ilm.json:/usr/share/metricbeat/metricbeat-ilm.json:ro'
     restart: unless-stopped
     networks:
       htpc_net:

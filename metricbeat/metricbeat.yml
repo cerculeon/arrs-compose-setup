@@ -1,48 +1,35 @@
 metricbeat.modules:
   - module: docker
     metricsets:
-      - "container"
-      - "cpu"
-      - "diskio"
-      - "healthcheck"
-      - "info"
-      - "image"
-      - "memory"
-      - "network"
+      - container
+      - cpu
+      - diskio
+      - healthcheck
+      - info
+      - image
+      - memory
+      - network
     hosts: ["unix:///var/run/docker.sock"]
     period: 10s
     enabled: true
 
-setup.ilm.enabled: true
-setup.ilm.policy_name: "metricbeat"
-setup.ilm.overwrite: true
-
-setup.template.enabled: true
-setup.template.overwrite: true
-setup.template.settings:
-  index.number_of_shards: 1
-  index.number_of_replicas: 0
-
 setup.kibana:
   host: "http://192.168.4.103:5601"
 
-output.elasticsearch:
-  hosts: ["192.168.4.103:9200"]
-  index: "metricbeat-%{[agent.version]}"
-
-setup.template.name: "metricbeat-%{[agent.version]}"
-setup.template.pattern: "metricbeat-%{[agent.version]}-*"
 setup.template.enabled: true
+setup.template.overwrite: true
+setup.template.name: "metricbeat-7.17.7"
+setup.template.pattern: "metricbeat-7.17.7-*"
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+  index.codec: best_compression
+  _source.enabled: true
+
 setup.ilm.enabled: true
 setup.ilm.overwrite: true
 setup.ilm.policy_name: "metricbeat"
-setup.ilm.rollover_alias: "metricbeat-%{[agent.version]}"
-setup.ilm.pattern: '{now/d}-000001'
-# ILM policy configured to rollover at 1GB or 1 day, and delete old indices after 3 days.
-# This prevents large single indices from filling disk on resource-constrained hosts
+setup.ilm.policy_file: "/usr/share/metricbeat/metricbeat-ilm.json"
 
-setup.template.settings:
-  index.number_of_shards: 1
-  index.codec: best_compression
-  _source.enabled: true
->>>>>>> 918ec49 (Update metricbeat.yml with ILM rollover and delete policy)
+output.elasticsearch:
+  hosts: ["http://192.168.4.103:9200"]
