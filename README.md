@@ -195,6 +195,23 @@ Additional notes:
 
 - The Beats config volume mounts use `${HTPC_DOCKER_COMPOSE_ROOT}` to locate config files. Set this variable in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env) to the absolute path of your local clone.
 
+### Beats ILM rollover policies
+
+Both Filebeat and Metricbeat use custom ILM policy files mounted into their containers:
+
+- Filebeat policy: [filebeat/filebeat-ilm.json](filebeat/filebeat-ilm.json)
+- Metricbeat policy: [metricbeat/metricbeat-ilm.json](metricbeat/metricbeat-ilm.json)
+
+Current rollover and retention behavior is the same for both Beats:
+
+- Rollover when an index reaches `1gb` or `1d`, whichever comes first
+- Delete indices once they are older than `3d`
+
+Related config references:
+
+- [filebeat/filebeat.yml](filebeat/filebeat.yml): `setup.ilm.policy_file: "/usr/share/filebeat/filebeat-ilm.json"`
+- [metricbeat/metricbeat.yml](metricbeat/metricbeat.yml): `setup.ilm.policy_file: "/usr/share/metricbeat/metricbeat-ilm.json"`
+
 ## Running the Stacks
 
 ### HTPC stack script behavior
