@@ -264,9 +264,8 @@ services:
     image: seerr/seerr:latest
     hostname: seerr_host
     container_name: seerr
+    user: "1000:1000"
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Europe/London
     volumes:
       - '${CONFIG_ROOT}/seerr:/app/config'
