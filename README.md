@@ -45,8 +45,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Jellyfin
 - Emby
 - Tautulli
-- Jellyseerr
-- FlareSolverr
+- Seerr
 - Filebeat
 - Metricbeat
 
@@ -253,7 +252,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 ### Utility and anti-bot support
 
 - FlareSolverr for Cloudflare/challenge handling in supported workflows
-- Jellyseerr for media request management (movies and TV via Jellyfin/Plex integration)
+- Seerr for media request management (movies and TV) with native Jellyfin, Emby, and Plex integration
 
 ## Observability Notes
 
