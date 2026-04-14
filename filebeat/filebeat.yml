@@ -27,6 +27,9 @@ setup.ilm.overwrite: true
 setup.ilm.policy_name: "filebeat-new-policy"
 setup.ilm.rollover_alias: "filebeat-new"
 setup.ilm.pattern: '{now/d}-000001'
+# Ensure this ILM policy file exists inside the container at this exact path
+# (for Docker/Compose deployments, mount filebeat-ilm.json to /usr/share/filebeat/filebeat-ilm.json),
+# otherwise Filebeat may fail to start or load the ILM policy.
 setup.ilm.policy_file: "/usr/share/filebeat/filebeat-ilm.json"
 
 setup.template.mappings:
