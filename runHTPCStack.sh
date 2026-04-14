@@ -6,7 +6,7 @@
 if [ "$1" == "yes" ]; then
     # If the argument is "yes", run docker-compose up -d
     echo "Argument is 'yes'. Running docker-compose up -d..."
-    pwd
+    echo "Current directory: $(pwd)"
     docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env up -d --build
 else
     # If the argument is not "yes", run docker-compose config
