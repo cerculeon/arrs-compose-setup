@@ -45,7 +45,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Jellyfin
 - Emby
 - Tautulli
-- FlareSolverr
+- Seerr
 - Filebeat
 - Metricbeat
 
@@ -252,6 +252,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 ### Utility and anti-bot support
 
 - FlareSolverr for Cloudflare/challenge handling in supported workflows
+- Seerr for media request management (movies and TV) with native Jellyfin, Emby, and Plex integration
 
 ## Observability Notes
 
@@ -308,6 +309,23 @@ docker restart filebeat metricbeat
 ```
 
 This is a one-time step after initial setup, or after any pull that modifies those files. See step 6 of [Quick Start](#quick-start).
+
+### Seerr permission denied on /app/config
+
+If Seerr exits immediately with:
+
+```text
+EACCES: permission denied, mkdir '/app/config/logs/'
+```
+
+The config directory on the host is not writable by UID 1000 (the user the container runs as). Fix it by setting the ownership of the Seerr config directory before starting the stack:
+
+```bash
+sudo chown -R 1000:1000 ${CONFIG_ROOT}/seerr
+docker restart seerr
+```
+
+This is a one-time step after initial setup.
 
 ### Network and static IP issues
 

@@ -260,6 +260,22 @@ services:
         ipv4_address: 172.66.1.14
 
 
+  seerr:
+    image: seerr/seerr:latest
+    hostname: seerr_host
+    container_name: seerr
+    user: "1000:1000"
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/seerr:/app/config'
+    ports:
+      - '5055:5055'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.15
+
 networks:
   htpc_net:
     ipam:
