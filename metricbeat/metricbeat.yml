@@ -24,17 +24,6 @@ setup.template.pattern: "metricbeat-7.17.7-*"
 setup.template.settings:
   index.number_of_shards: 1
   index.number_of_replicas: 0
-
-setup.kibana:
-  host: "http://192.168.4.103:5601"
-
-setup.template.enabled: true
-setup.template.overwrite: true
-setup.template.name: "metricbeat-7.17.7"
-setup.template.pattern: "metricbeat-7.17.7-*"
-setup.template.settings:
-  index.number_of_shards: 1
-  index.number_of_replicas: 0
   index.codec: best_compression
   _source.enabled: true
 
@@ -45,4 +34,3 @@ setup.ilm.policy_file: "/usr/share/metricbeat/metricbeat-ilm.json"
 
 output.elasticsearch:
   hosts: ["http://192.168.4.103:9200"]
->>>>>>> eb26413 (Update metricbeat.yml with ILM rollover and delete policy)
