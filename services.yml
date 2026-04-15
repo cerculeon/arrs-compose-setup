@@ -2,7 +2,7 @@
 # This file is read on every docker compose up.
 # Services marked false will never be pulled or started.
 
-emby: true
+emby: false
 filebeat: true
 flaresolverr: true
 jellyfin: true
