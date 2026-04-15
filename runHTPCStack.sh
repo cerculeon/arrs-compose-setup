@@ -1,18 +1,21 @@
 #!/bin/bash
 
-# Define the path to your Docker Compose file (not using yet)
-#COMPOSE_FILE="./htpcServices.yml"
+# Enabled services are controlled by services.yml.
+# Edit that file (or run: python3 select_containers.py --edit) to change
+# which containers are started. Services marked false are never pulled or started.
 
 if [ "$1" == "yes" ]; then
-    # If the argument is "yes", run docker-compose up -d
-    echo "Argument is 'yes'. Running docker-compose up -d..."
+    # Run: start only the services enabled in services.yml
+    echo "Starting enabled services (as defined in services.yml)..."
     echo "Current directory: $(pwd)"
-    docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env up -d --build
+    python3 select_containers.py \
+        --file htpcServices.yml \
+        --env-file HTPC/HTPC_envValues.env \
+        --run --build
 else
-    # If the argument is not "yes", run docker-compose config
-    echo "Argument is not 'yes'. Running docker-compose config..."
-    docker compose -f htpcServices.yml --env-file HTPC/HTPC_envValues.env config >HTPCconfig.yml
+    # Dry-run: print the docker compose command that would be executed
+    echo "Dry-run: showing command for enabled services (services.yml)..."
+    python3 select_containers.py \
+        --file htpcServices.yml \
+        --env-file HTPC/HTPC_envValues.env
 fi
-
-# Display status
-#echo "Docker Compose stack has been started."
