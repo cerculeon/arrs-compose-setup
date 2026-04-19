@@ -1,0 +1,9 @@
+# HTTP → HTTPS redirect for all virtual hosts.
+# envsubst processes this template; nginx variables are escaped with $$ so they
+# survive envsubst unchanged and are emitted as a single $ in the final config.
+server {
+    listen 80;
+    server_name _;
+
+    return 301 https://$$host$$request_uri;
+}
