@@ -286,6 +286,7 @@ services:
       - NGINX_SSL_CERT=${NGINX_SSL_CERT:-/etc/nginx/certs/cert.pem}
       - NGINX_SSL_KEY=${NGINX_SSL_KEY:-/etc/nginx/certs/key.pem}
     volumes:
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro'
       - '${HTPC_DOCKER_COMPOSE_ROOT}/nginx/templates:/etc/nginx/templates'
       - '${NGINX_SSL_CERT_DIR}:/etc/nginx/certs:ro'
     ports:
