@@ -276,26 +276,18 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.15
 
-  nginx:
-    image: nginx:alpine
-    hostname: nginx_host
-    container_name: nginx
-    environment:
-      - NGINX_DOMAIN=${NGINX_DOMAIN}
-      - NGINX_PLEX_HOST=${NGINX_PLEX_HOST}
-      - NGINX_SSL_CERT=${NGINX_SSL_CERT:-/etc/nginx/certs/cert.pem}
-      - NGINX_SSL_KEY=${NGINX_SSL_KEY:-/etc/nginx/certs/key.pem}
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    hostname: npm_host
+    container_name: nginx-proxy-manager
     volumes:
-      - '${HTPC_DOCKER_COMPOSE_ROOT}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro'
-      - '${HTPC_DOCKER_COMPOSE_ROOT}/nginx/templates:/etc/nginx/templates'
-      - '${NGINX_SSL_CERT_DIR}:/etc/nginx/certs:ro'
+      - '${CONFIG_ROOT}/nginx-proxy-manager/data:/data'
+      - '${CONFIG_ROOT}/nginx-proxy-manager/letsencrypt:/etc/letsencrypt'
     ports:
       - '80:80'
       - '443:443'
+      - '81:81'
     restart: unless-stopped
-    depends_on:
-      - jellyfin
-      - seerr
     networks:
       htpc_net:
         ipv4_address: 172.66.1.16

@@ -46,7 +46,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Emby
 - Tautulli
 - Seerr
-- Nginx (reverse proxy with TLS termination for Jellyfin, Plex, and Overseerr)
+- Nginx Proxy Manager (reverse proxy with Let's Encrypt TLS and web UI)
 - Filebeat
 - Metricbeat
 
@@ -68,13 +68,6 @@ The observability stack in [observabilityServices.yml](observabilityServices.yml
 │   └── HTPC_envValues.env
 ├── OBSERVER/
 │   └── OBSERVER_envValues.env
-├── nginx/
-│   ├── nginx.conf
-│   └── templates/
-│       ├── default.conf.template
-│       ├── jellyfin.conf.template
-│       ├── plex.conf.template
-│       └── overseerr.conf.template
 ├── filebeat/
 │   └── filebeat.yml
 └── metricbeat/
@@ -90,39 +83,26 @@ The observability stack in [observabilityServices.yml](observabilityServices.yml
 - Filebeat and Metricbeat run on the HTPC host and ship logs/metrics to Elasticsearch/Kibana.
 - Elasticsearch/Kibana/Portainer are defined as a separate compose stack intended to run independently.
 
-### Nginx Reverse Proxy
+### Nginx Proxy Manager
 
-The `nginx` service provides TLS termination and subdomain-based routing for the three main media-facing services:
-
-| Subdomain | Proxied service | Internal target |
-|---|---|---|
-| `jellyfin.<NGINX_DOMAIN>` | Jellyfin | `http://172.66.1.12:8096` |
-| `plex.<NGINX_DOMAIN>` | Plex (host network) | `http://<NGINX_PLEX_HOST>:32400` |
-| `overseerr.<NGINX_DOMAIN>` | Overseerr (seerr) | `http://172.66.1.15:5055` |
+The `nginx-proxy-manager` service provides a web-based reverse proxy with automatic Let's Encrypt TLS certificate management.
 
 **How it works:**
 
-- All plain HTTP traffic on port 80 is redirected to HTTPS (port 443) via a catch-all server block.
-- Per-service HTTPS server blocks are generated at container start by the official nginx:alpine image's built-in `envsubst` template mechanism: files under `nginx/templates/*.conf.template` are processed and written to `/etc/nginx/conf.d/`.
-- Environment variables (`NGINX_DOMAIN`, `NGINX_PLEX_HOST`, `NGINX_SSL_CERT`, `NGINX_SSL_KEY`) are injected at runtime — no credentials or hostnames are baked into tracked config files.
-- All proxy blocks forward the standard `Host`, `X-Real-IP`, `X-Forwarded-For`, and `X-Forwarded-Proto` headers.
-- WebSocket upgrade headers (`Upgrade`, `Connection`) are forwarded to all three services to support Jellyfin's and Plex's real-time features.
+- All proxy host configuration (domains, upstreams, SSL certs) is managed through the NPM web UI at `http://<host>:81`.
+- Let's Encrypt certificates are requested and renewed automatically by NPM — no manual cert management is required.
+- HTTP (port 80) and HTTPS (port 443) are handled by NPM; port 81 is the admin UI.
+- NPM stores all proxy configuration and certificates in `${CONFIG_ROOT}/nginx-proxy-manager/`.
 
-**TLS certificates:**
+**First-time setup:**
 
-Place your certificate and private key on the host at the path set in `NGINX_SSL_CERT_DIR`. The directory is mounted read-only into the container at `/etc/nginx/certs`. Self-signed certificates can be generated with:
-
-```bash
-mkdir -p /path/to/ssl/certs
-openssl req -x509 -nodes -newkey rsa:4096 \
-  -keyout /path/to/ssl/certs/key.pem \
-  -out /path/to/ssl/certs/cert.pem \
-  -days 365 -subj "/CN=example.com"
-```
-
-Replace `/path/to/ssl/certs` and `example.com` with your actual values from `HTPC_envValues.env`.
-
-**Plex note:** Because Plex uses `network_mode: host`, it is not reachable via a container IP. Set `NGINX_PLEX_HOST` to the host machine's LAN IP so nginx can reach Plex at `http://<host-ip>:32400`.
+1. Start the stack and open the NPM admin UI at `http://<host>:81`.
+2. Log in with the default credentials:
+   - Email: `admin@example.com`
+   - Password: `changeme`
+3. Change the admin email and password immediately.
+4. Add proxy hosts for Jellyfin (`172.66.1.12:8096`), Plex (host LAN IP:32400), and Overseerr (`172.66.1.15:5055`).
+5. Enable "Force SSL" and request a Let's Encrypt certificate for each proxy host.
 
 Typical deployment pattern:
 
@@ -175,6 +155,7 @@ Optional but recommended:
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
     - Emby: http://<host>:8099
+    - Nginx Proxy Manager admin UI: http://<host>:81 (default login: admin@example.com / changeme — change immediately)
 
 6. Fix Beats config file ownership (required or Beats containers will exit on start):
 
@@ -208,11 +189,8 @@ Defined in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env):
 - KIBANA_HOST
 - BEATS_HOST
 - HTPC_DOCKER_COMPOSE_ROOT
-- NGINX_DOMAIN — public domain used to build subdomain server names (e.g. `example.com`)
-- NGINX_PLEX_HOST — LAN IP of the host running Plex (required because Plex uses host networking)
-- NGINX_SSL_CERT_DIR — host path containing `cert.pem` and `key.pem` (mounted read-only into the nginx container)
-- NGINX_SSL_CERT — path inside the container to the TLS certificate (default: `/etc/nginx/certs/cert.pem`)
-- NGINX_SSL_KEY — path inside the container to the TLS private key (default: `/etc/nginx/certs/key.pem`)
+
+Nginx Proxy Manager stores all configuration in `${CONFIG_ROOT}/nginx-proxy-manager/` and requires no additional env vars. All proxy and SSL settings are managed through the web UI.
 
 Update these to your filesystem and network.
 
@@ -303,7 +281,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 
 ### Reverse proxy
 
-- Nginx — TLS-terminating reverse proxy exposing Jellyfin, Plex, and Overseerr via HTTPS subdomains; HTTP traffic is permanently redirected to HTTPS
+- Nginx Proxy Manager — web UI reverse proxy with automatic Let's Encrypt TLS certificate management; admin UI on port 81, HTTP on 80, HTTPS on 443
 
 ## Observability Notes
 
@@ -420,7 +398,6 @@ This project follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 - Replace hardcoded IPs in Beats configs with env-driven values
 - Add profiles to split optional services
-- Add reverse proxy integration examples
 - Add backup/restore guide for config volumes
 - Publish architecture diagrams
 
