@@ -277,7 +277,7 @@ services:
         ipv4_address: 172.66.1.15
 
   nginx-proxy-manager:
-    image: 'jc21/nginx-proxy-manager:latest'
+    image: 'jc21/nginx-proxy-manager:2.14.0'
     hostname: npm_host
     container_name: nginx-proxy-manager
     volumes:

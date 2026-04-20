@@ -101,7 +101,7 @@ The `nginx-proxy-manager` service provides a web-based reverse proxy with automa
    - Email: `admin@example.com`
    - Password: `changeme`
 3. Change the admin email and password immediately.
-4. Add proxy hosts for Jellyfin (`172.66.1.12:8096`), Plex (host LAN IP:32400), and Overseerr (`172.66.1.15:5055`).
+4. Add proxy hosts for Jellyfin (`172.66.1.12:8096`), Plex (host LAN IP:32400), and Seerr/Overseerr (`172.66.1.15:5055`).
 5. Enable "Force SSL" and request a Let's Encrypt certificate for each proxy host.
 
 Typical deployment pattern:
