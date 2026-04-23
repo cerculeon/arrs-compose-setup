@@ -46,6 +46,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Emby
 - Tautulli
 - Seerr
+- Nginx Proxy Manager (reverse proxy with Let's Encrypt TLS and web UI)
 - Filebeat
 - Metricbeat
 
@@ -81,6 +82,27 @@ The observability stack in [observabilityServices.yml](observabilityServices.yml
 - Plex runs in host networking mode.
 - Filebeat and Metricbeat run on the HTPC host and ship logs/metrics to Elasticsearch/Kibana.
 - Elasticsearch/Kibana/Portainer are defined as a separate compose stack intended to run independently.
+
+### Nginx Proxy Manager
+
+The `nginx-proxy-manager` service provides a web-based reverse proxy with automatic Let's Encrypt TLS certificate management.
+
+**How it works:**
+
+- All proxy host configuration (domains, upstreams, SSL certs) is managed through the NPM web UI at `http://<host>:81`.
+- Let's Encrypt certificates are requested and renewed automatically by NPM — no manual cert management is required.
+- HTTP (port 80) and HTTPS (port 443) are handled by NPM; port 81 is the admin UI.
+- NPM stores all proxy configuration and certificates in `${CONFIG_ROOT}/nginx-proxy-manager/`.
+
+**First-time setup:**
+
+1. Start the stack and open the NPM admin UI at `http://<host>:81`.
+2. Log in with the default credentials:
+   - Email: `admin@example.com`
+   - Password: `changeme`
+3. Change the admin email and password immediately.
+4. Add proxy hosts for Jellyfin (`172.66.1.12:8096`), Plex (host LAN IP:32400), and Seerr/Overseerr (`172.66.1.15:5055`).
+5. Enable "Force SSL" and request a Let's Encrypt certificate for each proxy host.
 
 Typical deployment pattern:
 
@@ -133,6 +155,7 @@ Optional but recommended:
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
     - Emby: http://<host>:8099
+    - Nginx Proxy Manager admin UI: http://<host>:81 (default login: admin@example.com / changeme — change immediately)
 
 6. Fix Beats config file ownership (required or Beats containers will exit on start):
 
@@ -166,6 +189,8 @@ Defined in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env):
 - KIBANA_HOST
 - BEATS_HOST
 - HTPC_DOCKER_COMPOSE_ROOT
+
+Nginx Proxy Manager stores all configuration in `${CONFIG_ROOT}/nginx-proxy-manager/` and requires no additional env vars. All proxy and SSL settings are managed through the web UI.
 
 Update these to your filesystem and network.
 
@@ -253,6 +278,10 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 
 - FlareSolverr for Cloudflare/challenge handling in supported workflows
 - Seerr for media request management (movies and TV) with native Jellyfin, Emby, and Plex integration
+
+### Reverse proxy
+
+- Nginx Proxy Manager — web UI reverse proxy with automatic Let's Encrypt TLS certificate management; admin UI on port 81, HTTP on 80, HTTPS on 443
 
 ## Observability Notes
 
@@ -369,7 +398,6 @@ This project follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 - Replace hardcoded IPs in Beats configs with env-driven values
 - Add profiles to split optional services
-- Add reverse proxy integration examples
 - Add backup/restore guide for config volumes
 - Publish architecture diagrams
 

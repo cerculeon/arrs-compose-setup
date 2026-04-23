@@ -276,6 +276,22 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.15
 
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:2.14.0'
+    hostname: npm_host
+    container_name: nginx-proxy-manager
+    volumes:
+      - '${CONFIG_ROOT}/nginx-proxy-manager/data:/data'
+      - '${CONFIG_ROOT}/nginx-proxy-manager/letsencrypt:/etc/letsencrypt'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.16
+
 networks:
   htpc_net:
     ipam:
