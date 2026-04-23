@@ -292,6 +292,18 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.16
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    hostname: cfd_host
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TUNNEL_TOKEN}
+    volumes:
+      - '${CONFIG_ROOT}/cloudflared:/home/nonroot/.cloudflared'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.17
+
 networks:
   htpc_net:
     ipam:
