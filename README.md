@@ -47,6 +47,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Tautulli
 - Seerr
 - Nginx Proxy Manager (reverse proxy with Let's Encrypt TLS and web UI)
+- Cloudflared (Cloudflare Tunnel)
 - Filebeat
 - Metricbeat
 
@@ -282,6 +283,10 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 ### Reverse proxy
 
 - Nginx Proxy Manager — web UI reverse proxy with automatic Let's Encrypt TLS certificate management; admin UI on port 81, HTTP on 80, HTTPS on 443
+
+### Cloudflare Tunnel
+
+- Cloudflared — exposes services through Cloudflare Zero Trust Tunnels without opening inbound firewall ports; requires a tunnel token from the Cloudflare Zero Trust dashboard set via `CLOUDFLARED_TUNNEL_TOKEN`
 
 ## Observability Notes
 
