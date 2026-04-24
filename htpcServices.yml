@@ -238,28 +238,6 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.13
-  emby:
-    image: emby/embyserver:latest
-    hostname: emby_host
-    container_name: emby
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - ${CONFIG_ROOT}/emby:/config
-      - ${TV_FOLDER}:/data/tvshows
-      - ${MOVIE_FOLDER}:/data/movies
-      - ${CONFIG_ROOT}/emby/plugins:/plugins
-    ports:
-      - 8099:8096
-      - 8922:8920  # optional (https)
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.14
-
-
   seerr:
     image: seerr/seerr:latest
     hostname: seerr_host
@@ -275,22 +253,6 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.15
-
-  nginx-proxy-manager:
-    image: 'jc21/nginx-proxy-manager:2.14.0'
-    hostname: npm_host
-    container_name: nginx-proxy-manager
-    volumes:
-      - '${CONFIG_ROOT}/nginx-proxy-manager/data:/data'
-      - '${CONFIG_ROOT}/nginx-proxy-manager/letsencrypt:/etc/letsencrypt'
-    ports:
-      - '80:80'
-      - '443:443'
-      - '81:81'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.16
 
   cloudflared:
     image: cloudflare/cloudflared:latest
