@@ -41,6 +41,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Sonarr
 - Mylar3
 - Readarr
+- Lidarr
 - Plex
 - Jellyfin
 - Tautulli
@@ -161,6 +162,7 @@ Defined in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env):
 - WATCH_FOLDER
 - EBOOK_FOLDER
 - COMIC_FOLDER
+- MUSIC_FOLDER
 - CONFIG_ROOT
 - KIBANA_HOST
 - BEATS_HOST
@@ -240,6 +242,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Sonarr: TV series
 - Readarr: ebooks/audiobooks
 - Mylar3: comics
+- Lidarr: music
 
 ### Media servers and analytics
 

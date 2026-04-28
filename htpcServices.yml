@@ -254,6 +254,26 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.15
 
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    hostname: lid_host
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=002
+    volumes:
+      - '${CONFIG_ROOT}/lidarr:/config'
+      - '${MUSIC_FOLDER}:/music'
+      - '${COMPLETE_DOWNLOADS}:/downloads'
+    ports:
+      - '8686:8686'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.18
+
   cloudflared:
     image: cloudflare/cloudflared:latest
     hostname: cfd_host
