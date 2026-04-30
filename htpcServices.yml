@@ -126,6 +126,7 @@ services:
     volumes:
       - '${CONFIG_ROOT}/readarr:/config'
       - '${EBOOK_FOLDER}:/EBOOKS'
+      - '${AUDIOBOOK_FOLDER}:/audiobooks'
       - '${COMPLETE_DOWNLOADS}:/downloads'
     ports:
       - '8787:8787'
@@ -133,6 +134,26 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.8
+
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    hostname: abs_host
+    container_name: audiobookshelf
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/audiobookshelf:/config'
+      - '${CONFIG_ROOT}/audiobookshelf/metadata:/metadata'
+      - '${AUDIOBOOK_FOLDER}:/audiobooks'
+      - '${EBOOK_FOLDER}:/ebooks'
+    ports:
+      - '13378:80'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.14
   plex:
     image: linuxserver/plex
     hostname: ple_host
