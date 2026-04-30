@@ -133,7 +133,7 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.8
+        ipv4_address: 172.66.1.16
 
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
