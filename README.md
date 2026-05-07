@@ -41,8 +41,10 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Sonarr
 - Mylar3
 - Readarr
+- Lidarr
 - Plex
 - Jellyfin
+- Navidrome
 - Tautulli
 - Seerr
 - Cloudflared (Cloudflare Tunnel)
@@ -129,9 +131,11 @@ Optional but recommended:
     - Sonarr: http://<host>:8989
     - Radarr: http://<host>:7878
     - Prowlarr: http://<host>:9696
+    - Lidarr: http://<host>:8686
     - SABnzbd: http://<host>:8088
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
+    - Navidrome: http://<host>:4533
 
 6. Fix Beats config file ownership (required or Beats containers will exit on start):
 
@@ -161,6 +165,7 @@ Defined in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env):
 - WATCH_FOLDER
 - EBOOK_FOLDER
 - COMIC_FOLDER
+- MUSIC_FOLDER
 - CONFIG_ROOT
 - KIBANA_HOST
 - BEATS_HOST
@@ -240,11 +245,13 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Sonarr: TV series
 - Readarr: ebooks/audiobooks
 - Mylar3: comics
+- Lidarr: music collection manager — monitors and grabs music releases; integrates with Prowlarr for indexer management and with SABnzbd/Transmission for downloads; requires `MUSIC_FOLDER` to be set in the env file
 
 ### Media servers and analytics
 
 - Plex
 - Jellyfin
+- Navidrome: dedicated music streaming server — serves the `MUSIC_FOLDER` library as a read-only mount; exposes a web-based streaming UI and a Subsonic-compatible API (port 4533)
 - Tautulli (Plex activity analytics)
 
 ### Utility and anti-bot support
