@@ -40,7 +40,8 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Radarr
 - Sonarr
 - Mylar3
-- Readarr
+- LazyLibrarian
+- Audiobookshelf
 - Plex
 - Jellyfin
 - Tautulli
@@ -132,6 +133,8 @@ Optional but recommended:
     - SABnzbd: http://<host>:8088
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
+    - LazyLibrarian: http://<host>:5299
+    - Audiobookshelf: http://<host>:13378
 
 6. Fix Beats config file ownership (required or Beats containers will exit on start):
 
@@ -160,6 +163,7 @@ Defined in [HTPC/HTPC_envValues.env](HTPC/HTPC_envValues.env):
 - COMPLETE_DOWNLOADS
 - WATCH_FOLDER
 - EBOOK_FOLDER
+- AUDIOBOOK_FOLDER
 - COMIC_FOLDER
 - CONFIG_ROOT
 - KIBANA_HOST
@@ -238,8 +242,12 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Prowlarr: indexer manager
 - Radarr: movies
 - Sonarr: TV series
-- Readarr: ebooks/audiobooks
+- LazyLibrarian: ebooks and audiobooks download management (replaces Readarr, which ended development); integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
 - Mylar3: comics
+
+### Audiobook streaming
+
+- Audiobookshelf: dedicated audiobook and ebook streaming server with library management, progress sync, and mobile apps; shares the same `AUDIOBOOK_FOLDER` and `EBOOK_FOLDER` paths as LazyLibrarian
 
 ### Media servers and analytics
 
