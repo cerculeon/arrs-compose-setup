@@ -115,7 +115,7 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.7
   readarr:
-    image: linuxserver/readarr:0:4.19-nightly
+    image: lscr.io/linuxserver/readarr:nightly
     hostname: rea_host
     container_name: readarr
     environment:
