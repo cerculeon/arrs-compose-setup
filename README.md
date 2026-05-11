@@ -245,8 +245,8 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Prowlarr: indexer manager
 - Radarr: movies
 - Sonarr: TV series
-- Readarr: automated book release monitoring and download management
-- LazyLibrarian: ebook/audiobook library management and processing; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
+- Readarr: automated book release monitoring and download acquisition
+- LazyLibrarian: ebook/audiobook library management and post-processing after downloads; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
 - Mylar3: comics
 
 ### Audiobook streaming

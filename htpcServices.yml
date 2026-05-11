@@ -115,8 +115,8 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.7
   readarr:
-    image: lscr.io/linuxserver/readarr:nightly
-    hostname: rea_host
+    image: lscr.io/linuxserver/readarr:latest
+    hostname: read_host
     container_name: readarr
     environment:
       - PUID=1000
