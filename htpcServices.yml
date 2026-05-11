@@ -135,6 +135,24 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.16
 
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    hostname: cal_host
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/calibre-web:/config'
+      - '${EBOOK_FOLDER}:/books'
+    ports:
+      - '8083:8083'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.8
+
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
     hostname: abs_host

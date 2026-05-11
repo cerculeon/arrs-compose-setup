@@ -41,6 +41,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Sonarr
 - Mylar3
 - LazyLibrarian
+- Calibre-Web
 - Audiobookshelf
 - Plex
 - Jellyfin
@@ -134,6 +135,7 @@ Optional but recommended:
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
     - LazyLibrarian: http://<host>:5299
+    - Calibre-Web: http://<host>:8083
     - Audiobookshelf: http://<host>:13378
 
 6. Fix Beats config file ownership (required or Beats containers will exit on start):
@@ -248,6 +250,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 ### Audiobook streaming
 
 - Audiobookshelf: dedicated audiobook and ebook streaming server with library management, progress sync, and mobile apps; shares the same `AUDIOBOOK_FOLDER` and `EBOOK_FOLDER` paths as LazyLibrarian
+- Calibre-Web: web UI for browsing and reading ebooks; uses the same `EBOOK_FOLDER` library path
 
 ### Media servers and analytics
 
