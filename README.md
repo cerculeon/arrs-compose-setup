@@ -40,6 +40,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Radarr
 - Sonarr
 - Mylar3
+- Readarr
 - LazyLibrarian
 - Audiobookshelf
 - Plex
@@ -130,6 +131,7 @@ Optional but recommended:
     - Sonarr: http://<host>:8989
     - Radarr: http://<host>:7878
     - Prowlarr: http://<host>:9696
+    - Readarr: http://<host>:8787
     - SABnzbd: http://<host>:8088
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
@@ -242,7 +244,8 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Prowlarr: indexer manager
 - Radarr: movies
 - Sonarr: TV series
-- LazyLibrarian: ebooks and audiobooks download management (replaces Readarr, which ended development); integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
+- Readarr: ebooks
+- LazyLibrarian: ebooks and audiobooks download management; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
 - Mylar3: comics
 
 ### Audiobook streaming
