@@ -136,6 +136,7 @@ Optional but recommended:
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
     - LazyLibrarian: http://<host>:5299
+    - Readarr: http://<host>:8787
     - Calibre-Web: http://<host>:8083
     - Audiobookshelf: http://<host>:13378
 
@@ -245,7 +246,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Prowlarr: indexer manager
 - Radarr: movies
 - Sonarr: TV series
-- Readarr: automated book release monitoring and download acquisition
+- Readarr: automated book release monitoring and download orchestration via integrated download clients
 - LazyLibrarian: ebook/audiobook library management and post-processing after downloads; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
 - Mylar3: comics
 
