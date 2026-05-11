@@ -134,6 +134,26 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.16
+  bindery:
+    image: ghcr.io/vavallee/bindery:latest
+    hostname: bin_host
+    container_name: bindery
+    user: "1000:1000"
+    environment:
+      - BINDERY_PUID=1000
+      - BINDERY_PGID=1000
+      - BINDERY_AUDIOBOOK_DIR=/audiobooks
+    volumes:
+      - '${CONFIG_ROOT}/bindery:/config'
+      - '${EBOOK_FOLDER}:/books'
+      - '${AUDIOBOOK_FOLDER}:/audiobooks'
+      - '${COMPLETE_DOWNLOADS}:/downloads'
+    ports:
+      - '8787:8787'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.18
 
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
