@@ -250,7 +250,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Sonarr: TV series
 - Readarr: automated book release monitoring and download orchestration via integrated download clients
 - LazyLibrarian: ebook/audiobook library management and post-processing after downloads; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
-- Shelfmark: book-grabbing/downloading manager; can use existing downloader paths such as `COMPLETE_DOWNLOADS`
+- Shelfmark: ebook search and download manager; integrates with existing downloader paths such as `COMPLETE_DOWNLOADS`
 - Mylar3: comics
 
 ### Audiobook streaming
