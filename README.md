@@ -43,6 +43,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Readarr
 - LazyLibrarian
 - Calibre-Web
+- Shelfmark
 - Audiobookshelf
 - Plex
 - Jellyfin
@@ -138,6 +139,7 @@ Optional but recommended:
     - LazyLibrarian: http://<host>:5299
     - Readarr: http://<host>:8787
     - Calibre-Web: http://<host>:8083
+    - Shelfmark: http://<host>:8084
     - Audiobookshelf: http://<host>:13378
 
 6. Fix Beats config file ownership (required or Beats containers will exit on start):
@@ -248,6 +250,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Sonarr: TV series
 - Readarr: automated book release monitoring and download orchestration via integrated download clients
 - LazyLibrarian: ebook/audiobook library management and post-processing after downloads; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
+- Shelfmark: book-grabbing/downloading manager; can use existing downloader paths such as `COMPLETE_DOWNLOADS`
 - Mylar3: comics
 
 ### Audiobook streaming
