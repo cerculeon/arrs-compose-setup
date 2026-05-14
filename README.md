@@ -40,7 +40,9 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Radarr
 - Sonarr
 - Mylar3
+- Readarr
 - LazyLibrarian
+- Calibre-Web
 - Shelfmark
 - Audiobookshelf
 - Plex
@@ -135,6 +137,8 @@ Optional but recommended:
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
     - LazyLibrarian: http://<host>:5299
+    - Readarr: http://<host>:8787
+    - Calibre-Web: http://<host>:8083
     - Shelfmark: http://<host>:8084
     - Audiobookshelf: http://<host>:13378
 
@@ -244,13 +248,15 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Prowlarr: indexer manager
 - Radarr: movies
 - Sonarr: TV series
-- LazyLibrarian: ebooks and audiobooks download management (replaces Readarr, which ended development); integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
-- Shelfmark: book-grabbing/downloading manager; can use existing downloader paths such as `COMPLETE_DOWNLOADS`
+- Readarr: automated book release monitoring and download orchestration via integrated download clients
+- LazyLibrarian: ebook/audiobook library management and post-processing after downloads; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
+- Shelfmark: ebook search and download manager; integrates with existing downloader paths such as `COMPLETE_DOWNLOADS`
 - Mylar3: comics
 
 ### Audiobook streaming
 
 - Audiobookshelf: dedicated audiobook and ebook streaming server with library management, progress sync, and mobile apps; shares the same `AUDIOBOOK_FOLDER` and `EBOOK_FOLDER` paths as LazyLibrarian
+- Calibre-Web: web UI for browsing and reading ebooks; uses the same `EBOOK_FOLDER` library path
 
 ### Media servers and analytics
 

@@ -114,6 +114,25 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.7
+  readarr:
+    image: 'linuxserver/readarr:0.4.19-nightly'
+    hostname: read_host
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022
+    volumes:
+      - '${CONFIG_ROOT}/readarr:/config'
+      - '${EBOOK_FOLDER}:/EBOOKS'
+      - '${COMPLETE_DOWNLOADS}:/downloads'
+    ports:
+      - '8787:8787'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.28
   lazylibrarian:
     image: lscr.io/linuxserver/lazylibrarian:latest
     hostname: laz_host
@@ -134,6 +153,24 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.16
+
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    hostname: cal_host
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/calibre-web:/config'
+      - '${EBOOK_FOLDER}:/books'
+    ports:
+      - '8083:8083'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.8
 
   shelfmark:
     image: ghcr.io/calibrain/shelfmark:latest
