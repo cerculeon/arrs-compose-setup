@@ -135,6 +135,25 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.16
 
+  shelfmark:
+    image: ghcr.io/calibrain/shelfmark:latest
+    hostname: shf_host
+    container_name: shelfmark
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/shelfmark:/config'
+      - '${EBOOK_FOLDER}:/books'
+      - '${COMPLETE_DOWNLOADS}:/downloads'
+    ports:
+      - '8084:8084'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.18
+
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
     hostname: abs_host
