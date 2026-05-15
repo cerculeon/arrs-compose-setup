@@ -1,5 +1,6 @@
 ---
 services:
+  # download management
   sabnzbd:
     image: linuxserver/sabnzbd
     hostname: sab_host
@@ -41,7 +42,9 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.3
+        ipv4_address: 172.66.1.2
+  
+  # indexer management
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     hostname: pro_host
@@ -58,7 +61,23 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.4
+        ipv4_address: 172.66.1.3
+ # media management 
+  seerr:
+    image: seerr/seerr:latest
+    hostname: seerr_host
+    container_name: seerr
+    user: "1000:1000"
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/seerr:/app/config'
+    ports:
+      - '5055:5055'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.17
   radarr:
     image: linuxserver/radarr
     hostname: rad_host
@@ -77,7 +96,7 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.5
+        ipv4_address: 172.66.1.4
   sonarr:
     image: linuxserver/sonarr
     hostname: son_host
@@ -96,7 +115,9 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.6
+        ipv4_address: 172.66.1.5
+ 
+  # comic management
   mylar3:
     image: 'lscr.io/linuxserver/mylar3:latest'
     hostname: myl_host
@@ -113,7 +134,8 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.7
+        ipv4_address: 172.66.1.6
+ # book management 
   readarr:
     image: 'linuxserver/readarr:0.4.19-nightly'
     hostname: read_host
@@ -132,7 +154,43 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.28
+        ipv4_address: 172.66.1.8
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    hostname: cal_host
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/calibre-web:/config'
+      - '${EBOOK_FOLDER}:/books'
+    ports:
+      - '8083:8083'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.7
+  shelfmark:
+    image: ghcr.io/calibrain/shelfmark:latest
+    hostname: shf_host
+    container_name: shelfmark
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/shelfmark:/config'
+      - '${EBOOK_FOLDER}:/books'
+      - '${COMPLETE_DOWNLOADS}:/downloads'
+    ports:
+      - '8084:8084'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.9
+
   lazylibrarian:
     image: lscr.io/linuxserver/lazylibrarian:latest
     hostname: laz_host
@@ -152,45 +210,7 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.16
-
-  calibre-web:
-    image: lscr.io/linuxserver/calibre-web:latest
-    hostname: cal_host
-    container_name: calibre-web
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - '${CONFIG_ROOT}/calibre-web:/config'
-      - '${EBOOK_FOLDER}:/books'
-    ports:
-      - '8083:8083'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.8
-
-  shelfmark:
-    image: ghcr.io/calibrain/shelfmark:latest
-    hostname: shf_host
-    container_name: shelfmark
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - '${CONFIG_ROOT}/shelfmark:/config'
-      - '${EBOOK_FOLDER}:/books'
-      - '${COMPLETE_DOWNLOADS}:/downloads'
-    ports:
-      - '8084:8084'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.18
-
+        ipv4_address: 172.66.1.10 
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
     hostname: abs_host
@@ -209,74 +229,9 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.14
-  plex:
-    image: linuxserver/plex
-    hostname: ple_host
-    container_name: plex
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - VERSION=docker
-    network_mode: host
-    volumes:
-      - '${CONFIG_ROOT}/plex:/config'
-      - '${TV_FOLDER}:/data/tvshows'
-      - ${MOVIE_FOLDER}:/data/movies
-      - /media/transcode:/transcode
-    restart: unless-stopped
-  filebeat:
-    user: root
-    image: 'docker.elastic.co/beats/filebeat:7.17.7'
-    hostname: fil_host
-    container_name: filebeat
-    volumes:
-      - '/var/lib/docker:/var/lib/docker:ro'
-      - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
-      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/modules.d:/usr/share/filebeat/modules.d'
-      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat-ilm.json:/usr/share/filebeat/filebeat-ilm.json:ro'
-      - '${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.9
-  metricbeat:
-    user: root
-    image: 'docker.elastic.co/beats/metricbeat:7.17.7'
-    hostname: met_host
-    container_name: metricbeat
-    environment:
-      - 'setup.kibana.host=${KIBANA_HOST}:5601'
-      - ELASTICSEARCH_HOSTS=http://${KIBANA_HOST}:9200
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - '/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro'
-      - '/proc:/hostfs/proc:ro'
-      - '/:/hostfs:ro'
-      - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml'
-      - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat-ilm.json:/usr/share/metricbeat/metricbeat-ilm.json:ro'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.10
-  tautulli:
-    image: tautulli/tautulli
-    hostname: tau_host
-    container_name: tautulli
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - '${CONFIG_ROOT}/tautulli:/config'
-    ports:
-      - '8181:8181'
-    restart: unless-stopped
-    networks:
-      htpc_net:
         ipv4_address: 172.66.1.11
-
+ 
+  # media servers
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     hostname: jel_host
@@ -299,7 +254,76 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.12
+  plex:
+    image: linuxserver/plex
+    hostname: ple_host
+    container_name: plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    network_mode: host
+    volumes:
+      - '${CONFIG_ROOT}/plex:/config'
+      - '${TV_FOLDER}:/data/tvshows'
+      - ${MOVIE_FOLDER}:/data/movies
+      - /media/transcode:/transcode
+    restart: unless-stopped
 
+# monitoring services
+   tautulli:
+    image: tautulli/tautulli
+    hostname: tau_host
+    container_name: tautulli
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - '${CONFIG_ROOT}/tautulli:/config'
+    ports:
+      - '8181:8181'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.13
+  filebeat:
+    user: root
+    image: 'docker.elastic.co/beats/filebeat:7.17.7'
+    hostname: fil_host
+    container_name: filebeat
+    volumes:
+      - '/var/lib/docker:/var/lib/docker:ro'
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/modules.d:/usr/share/filebeat/modules.d'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/filebeat/filebeat-ilm.json:/usr/share/filebeat/filebeat-ilm.json:ro'
+      - '${CONFIG_ROOT}/filebeat/logs:/var/log/filebeat'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.14
+  metricbeat:
+    user: root
+    image: 'docker.elastic.co/beats/metricbeat:7.17.7'
+    hostname: met_host
+    container_name: metricbeat
+    environment:
+      - 'setup.kibana.host=${KIBANA_HOST}:5601'
+      - ELASTICSEARCH_HOSTS=http://${KIBANA_HOST}:9200
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - '/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro'
+      - '/proc:/hostfs/proc:ro'
+      - '/:/hostfs:ro'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml'
+      - '${HTPC_DOCKER_COMPOSE_ROOT}/metricbeat/metricbeat-ilm.json:/usr/share/metricbeat/metricbeat-ilm.json:ro'
+    restart: unless-stopped
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.15
+
+# Network utilities
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -314,22 +338,7 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.13
-  seerr:
-    image: seerr/seerr:latest
-    hostname: seerr_host
-    container_name: seerr
-    user: "1000:1000"
-    environment:
-      - TZ=Europe/London
-    volumes:
-      - '${CONFIG_ROOT}/seerr:/app/config'
-    ports:
-      - '5055:5055'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.15
+        ipv4_address: 172.66.1.16
 
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -341,7 +350,7 @@ services:
     restart: unless-stopped
     networks:
       htpc_net:
-        ipv4_address: 172.66.1.17
+        ipv4_address: 172.66.1.18
 
 networks:
   htpc_net:
