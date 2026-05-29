@@ -42,6 +42,7 @@ The HTPC stack in [htpcServices.yml](htpcServices.yml) includes:
 - Mylar3
 - Readarr
 - LazyLibrarian
+- Livrarr
 - Calibre-Web
 - Shelfmark
 - Audiobookshelf
@@ -137,6 +138,7 @@ Optional but recommended:
     - Transmission: http://<host>:9091
     - Jellyfin: http://<host>:8096
     - LazyLibrarian: http://<host>:5299
+    - Livrarr: http://<host>:8686
     - Readarr: http://<host>:8787
     - Calibre-Web: http://<host>:8083
     - Shelfmark: http://<host>:8084
@@ -250,6 +252,7 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 - Sonarr: TV series
 - Readarr: automated book release monitoring and download orchestration via integrated download clients
 - LazyLibrarian: ebook/audiobook library management and post-processing after downloads; integrates with SABnzbd, Transmission, and Prowlarr; the `linuxserver/mods:lazylibrarian-ffmpeg` mod enables audiobook post-processing
+- Livrarr: book/library management arr service; monitors, searches, and routes book downloads; shares the same `EBOOK_FOLDER` and `COMPLETE_DOWNLOADS` paths as Readarr and LazyLibrarian
 - Shelfmark: ebook search and download manager; integrates with existing downloader paths such as `COMPLETE_DOWNLOADS`
 - Mylar3: comics
 
