@@ -19,8 +19,8 @@ setup.kibana:
 
 setup.template.enabled: true
 setup.template.overwrite: true
-setup.template.name: "metricbeat-7.17.7"
-setup.template.pattern: "metricbeat-7.17.7-*"
+setup.template.name: "metricbeat"
+setup.template.pattern: "metricbeat-*"
 setup.template.settings:
   index.number_of_shards: 1
   index.number_of_replicas: 0
