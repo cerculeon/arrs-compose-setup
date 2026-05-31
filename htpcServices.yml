@@ -289,7 +289,7 @@ services:
         ipv4_address: 172.66.1.14
   filebeat:
     user: root
-    image: 'docker.elastic.co/beats/filebeat:8'
+    image: 'docker.elastic.co/beats/filebeat:8.17.7'
     hostname: fil_host
     container_name: filebeat
     volumes:
@@ -305,7 +305,7 @@ services:
         ipv4_address: 172.66.1.15
   metricbeat:
     user: root
-    image: 'docker.elastic.co/beats/metricbeat:8'
+    image: 'docker.elastic.co/beats/metricbeat:8.17.7'
     hostname: met_host
     container_name: metricbeat
     environment:
