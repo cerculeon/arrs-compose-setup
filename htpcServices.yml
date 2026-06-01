@@ -136,42 +136,6 @@ services:
       htpc_net:
         ipv4_address: 172.66.1.7
   # book management
-  readarr:
-    image: 'linuxserver/readarr:0.4.19-nightly'
-    hostname: read_host
-    container_name: readarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - UMASK_SET=022
-    volumes:
-      - '${CONFIG_ROOT}/readarr:/config'
-      - '${EBOOK_FOLDER}:/EBOOKS'
-      - '${COMPLETE_DOWNLOADS}:/downloads'
-    ports:
-      - '8787:8787'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.8
-  calibre-web:
-    image: lscr.io/linuxserver/calibre-web:latest
-    hostname: cal_host
-    container_name: calibre-web
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - '${CONFIG_ROOT}/calibre-web:/config'
-      - '${EBOOK_FOLDER}:/books'
-    ports:
-      - '8083:8083'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.9
   shelfmark:
     image: ghcr.io/calibrain/shelfmark:latest
     hostname: shf_host
@@ -190,27 +154,6 @@ services:
     networks:
       htpc_net:
         ipv4_address: 172.66.1.10
-
-  lazylibrarian:
-    image: lscr.io/linuxserver/lazylibrarian:latest
-    hostname: laz_host
-    container_name: lazylibrarian
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - DOCKER_MODS=linuxserver/mods:lazylibrarian-ffmpeg
-    volumes:
-      - '${CONFIG_ROOT}/lazylibrarian:/config'
-      - '${EBOOK_FOLDER}:/ebooks'
-      - '${AUDIOBOOK_FOLDER}:/audiobooks'
-      - '${COMPLETE_DOWNLOADS}:/downloads'
-    ports:
-      - '5299:5299'
-    restart: unless-stopped
-    networks:
-      htpc_net:
-        ipv4_address: 172.66.1.11
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
     hostname: abs_host
@@ -289,7 +232,7 @@ services:
         ipv4_address: 172.66.1.14
   filebeat:
     user: root
-    image: 'docker.elastic.co/beats/filebeat:8.17.7'
+    image: 'elastic/filebeat:8.19.16'
     hostname: fil_host
     container_name: filebeat
     volumes:
@@ -305,7 +248,7 @@ services:
         ipv4_address: 172.66.1.15
   metricbeat:
     user: root
-    image: 'docker.elastic.co/beats/metricbeat:8.17.7'
+    image: 'elastic/metricbeat:8.19.16'
     hostname: met_host
     container_name: metricbeat
     environment:

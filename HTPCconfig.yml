@@ -1,0 +1,652 @@
+name: arrs-compose-setup
+services:
+  audiobookshelf:
+    container_name: audiobookshelf
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+    hostname: abs_host
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.12
+    ports:
+      - mode: ingress
+        target: 80
+        published: "13378"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/audiobookshelf
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/htpc-config/audiobookshelf/metadata
+        target: /metadata
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/audiobooks
+        target: /audiobooks
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/ebooks
+        target: /ebooks
+        bind:
+          create_host_path: true
+  calibre-web:
+    container_name: calibre-web
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+    hostname: cal_host
+    image: lscr.io/linuxserver/calibre-web:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.9
+    ports:
+      - mode: ingress
+        target: 8083
+        published: "8083"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/calibre-web
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/ebooks
+        target: /books
+        bind:
+          create_host_path: true
+  cloudflared:
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - eyJhIjoiMDdjMTQ4YzQyYWRlN2UyMGViOTRiYTI3NDNmNjkxY2EiLCJ0IjoiNGFmMzU4YjgtYTgzMS00Y2RhLThiNzQtMmQ2ZDExMmI1MDVhIiwicyI6IlpEQTROR00yTkRRdE1tWTFOeTAwWlRrM0xXSmtNall0T1RJeFlUWXdZVGc0TmpkaiJ9
+    container_name: cloudflared
+    hostname: cfd_host
+    image: cloudflare/cloudflared:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.18
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/cloudflared
+        target: /home/nonroot/.cloudflared
+        bind:
+          create_host_path: true
+  filebeat:
+    container_name: filebeat
+    hostname: fil_host
+    image: elastic/filebeat:8.19.16
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.15
+    restart: unless-stopped
+    user: root
+    volumes:
+      - type: bind
+        source: /var/lib/docker
+        target: /var/lib/docker
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/arrs-compose-setup/filebeat/filebeat.yml
+        target: /usr/share/filebeat/filebeat.yml
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/arrs-compose-setup/filebeat/modules.d
+        target: /usr/share/filebeat/modules.d
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/arrs-compose-setup/filebeat/filebeat-ilm.json
+        target: /usr/share/filebeat/filebeat-ilm.json
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/htpc-config/filebeat/logs
+        target: /var/log/filebeat
+        bind:
+          create_host_path: true
+  flaresolverr:
+    container_name: flaresolverr
+    environment:
+      CAPTCHA_SOLVER: none
+      LOG_HTML: "false"
+      LOG_LEVEL: info
+      TZ: Europe/London
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.17
+    ports:
+      - mode: ingress
+        target: 8191
+        published: "8191"
+        protocol: tcp
+    restart: unless-stopped
+  jellyfin:
+    container_name: jellyfin
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Etc/UTC
+    hostname: jel_host
+    image: lscr.io/linuxserver/jellyfin:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.13
+    ports:
+      - mode: ingress
+        target: 8096
+        published: "8096"
+        protocol: tcp
+      - mode: ingress
+        target: 8920
+        published: "8920"
+        protocol: tcp
+      - mode: ingress
+        target: 7359
+        published: "7359"
+        protocol: udp
+      - mode: ingress
+        target: 1900
+        published: "1900"
+        protocol: udp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/jellyfin
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/tv
+        target: /data/tvshows
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/movies
+        target: /data/movies
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/htpc-config/jellyfin/plugins
+        target: /plugins
+        bind:
+          create_host_path: true
+  lazylibrarian:
+    container_name: lazylibrarian
+    environment:
+      DOCKER_MODS: linuxserver/mods:lazylibrarian-ffmpeg
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+    hostname: laz_host
+    image: lscr.io/linuxserver/lazylibrarian:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.11
+    ports:
+      - mode: ingress
+        target: 5299
+        published: "5299"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/lazylibrarian
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/ebooks
+        target: /ebooks
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/audiobooks
+        target: /audiobooks
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+  metricbeat:
+    container_name: metricbeat
+    environment:
+      ELASTICSEARCH_HOSTS: http://192.168.4.103:9200
+      setup.kibana.host: 192.168.4.103:5601
+    hostname: met_host
+    image: elastic/metricbeat:8.19.16
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.16
+    restart: unless-stopped
+    user: root
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /sys/fs/cgroup
+        target: /hostfs/sys/fs/cgroup
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /proc
+        target: /hostfs/proc
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /
+        target: /hostfs
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/arrs-compose-setup/metricbeat/metricbeat.yml
+        target: /usr/share/metricbeat/metricbeat.yml
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /opt/arrs-compose-setup/metricbeat/metricbeat-ilm.json
+        target: /usr/share/metricbeat/metricbeat-ilm.json
+        read_only: true
+        bind:
+          create_host_path: true
+  mylar3:
+    container_name: mylar3
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+    hostname: myl_host
+    image: lscr.io/linuxserver/mylar3:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.7
+    ports:
+      - mode: ingress
+        target: 8090
+        published: "8090"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/mylar3
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/comics
+        target: /comics
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+  plex:
+    container_name: plex
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      VERSION: docker
+    hostname: ple_host
+    image: linuxserver/plex
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/plex
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/tv
+        target: /data/tvshows
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/movies
+        target: /data/movies
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /media/transcode
+        target: /transcode
+        bind:
+          create_host_path: true
+  prowlarr:
+    container_name: prowlarr
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+      UMASK_SET: "022"
+    hostname: pro_host
+    image: lscr.io/linuxserver/prowlarr:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.3
+    ports:
+      - mode: ingress
+        target: 9696
+        published: "9696"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/prowlarr
+        target: /config
+        bind:
+          create_host_path: true
+  radarr:
+    container_name: radarr
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+      UMASK_SET: "002"
+    hostname: rad_host
+    image: linuxserver/radarr
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.5
+    ports:
+      - mode: ingress
+        target: 7878
+        published: "7878"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/radarr
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/movies
+        target: /movies
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+  readarr:
+    container_name: readarr
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+      UMASK_SET: "022"
+    hostname: read_host
+    image: linuxserver/readarr:0.4.19-nightly
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.8
+    ports:
+      - mode: ingress
+        target: 8787
+        published: "8787"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/readarr
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/ebooks
+        target: /EBOOKS
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+  sabnzbd:
+    container_name: sabnzbd
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+    hostname: sab_host
+    image: linuxserver/sabnzbd
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.1
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8088"
+        protocol: tcp
+      - mode: ingress
+        target: 9090
+        published: "9999"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/sabnzbd
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/incomplete
+        target: /incomplete-downloads
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/watch
+        target: /media/watch
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/tv
+        target: /media/TV
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/movies/
+        target: /media/MOVIES
+        bind:
+          create_host_path: true
+  seerr:
+    container_name: seerr
+    environment:
+      TZ: Europe/London
+    hostname: seerr_host
+    image: seerr/seerr:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.4
+    ports:
+      - mode: ingress
+        target: 5055
+        published: "5055"
+        protocol: tcp
+    restart: unless-stopped
+    user: 1000:1000
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/seerr
+        target: /app/config
+        bind:
+          create_host_path: true
+  shelfmark:
+    container_name: shelfmark
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+    hostname: shf_host
+    image: ghcr.io/calibrain/shelfmark:latest
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.10
+    ports:
+      - mode: ingress
+        target: 8084
+        published: "8084"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/shelfmark
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/books/ebooks
+        target: /books
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+  sonarr:
+    container_name: sonarr
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+      UMASK_SET: "002"
+    hostname: son_host
+    image: linuxserver/sonarr
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.6
+    ports:
+      - mode: ingress
+        target: 8989
+        published: "8989"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/sonarr
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/tv
+        target: /tv
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+  tautulli:
+    container_name: tautulli
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+    hostname: tau_host
+    image: tautulli/tautulli
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.14
+    ports:
+      - mode: ingress
+        target: 8181
+        published: "8181"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/tautulli
+        target: /config
+        bind:
+          create_host_path: true
+  transmission:
+    container_name: transmission
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: Europe/London
+    hostname: tra_host
+    image: linuxserver/transmission:3.00-r5-ls137
+    networks:
+      htpc_net:
+        ipv4_address: 172.66.1.2
+    ports:
+      - mode: ingress
+        target: 9091
+        published: "9091"
+        protocol: tcp
+      - mode: ingress
+        target: 51413
+        published: "51413"
+        protocol: tcp
+      - mode: ingress
+        target: 51413
+        published: "51413"
+        protocol: udp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/htpc-config/transmission
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/complete
+        target: /downloads
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/media/downloads/watch
+        target: /watch
+        bind:
+          create_host_path: true
+networks:
+  htpc_net:
+    name: arrs-compose-setup_htpc_net
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.66.0.0/16
