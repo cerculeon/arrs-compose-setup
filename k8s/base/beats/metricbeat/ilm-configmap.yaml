@@ -1,0 +1,32 @@
+---
+# Metricbeat ILM policy - mirrors metricbeat/metricbeat-ilm.json from the original setup
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metricbeat-ilm-policy
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: metricbeat
+    app.kubernetes.io/part-of: arrs-stack
+data:
+  metricbeat-ilm.json: |
+    {
+      "policy": {
+        "phases": {
+          "hot": {
+            "actions": {
+              "rollover": {
+                "max_size": "1gb",
+                "max_age": "1d"
+              }
+            }
+          },
+          "delete": {
+            "min_age": "3d",
+            "actions": {
+              "delete": {}
+            }
+          }
+        }
+      }
+    }

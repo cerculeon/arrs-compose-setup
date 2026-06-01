@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sabnzbd
+  namespace: htpc
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/part-of: arrs-stack
+    app.kubernetes.io/component: downloader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sabnzbd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sabnzbd
+        app.kubernetes.io/part-of: arrs-stack
+        app.kubernetes.io/component: downloader
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: sabnzbd
+          image: linuxserver/sabnzbd:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: https
+              containerPort: 9090
+              protocol: TCP
+          env:
+            - name: TZ
+              value: Europe/London
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 200m
+            limits:
+              memory: 1Gi
+              cpu: 1000m
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: incomplete-downloads
+              mountPath: /incomplete-downloads
+            - name: watch
+              mountPath: /media/watch
+            - name: tv
+              mountPath: /media/TV
+            - name: movies
+              mountPath: /media/MOVIES
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: media-downloads-complete
+        - name: incomplete-downloads
+          persistentVolumeClaim:
+            claimName: media-downloads-incomplete
+        - name: watch
+          persistentVolumeClaim:
+            claimName: media-downloads-watch
+        - name: tv
+          persistentVolumeClaim:
+            claimName: media-tv
+        - name: movies
+          persistentVolumeClaim:
+            claimName: media-movies
+      restartPolicy: Always

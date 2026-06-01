@@ -1,0 +1,32 @@
+---
+# Filebeat ILM policy - mirrors filebeat/filebeat-ilm.json from the original setup
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-ilm-policy
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: filebeat
+    app.kubernetes.io/part-of: arrs-stack
+data:
+  filebeat-ilm.json: |
+    {
+      "policy": {
+        "phases": {
+          "hot": {
+            "actions": {
+              "rollover": {
+                "max_size": "1gb",
+                "max_age": "1d"
+              }
+            }
+          },
+          "delete": {
+            "min_age": "3d",
+            "actions": {
+              "delete": {}
+            }
+          }
+        }
+      }
+    }

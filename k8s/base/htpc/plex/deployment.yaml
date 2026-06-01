@@ -1,0 +1,88 @@
+---
+# Plex uses hostNetwork to enable local network discovery (Bonjour/GDM)
+# and direct LAN streaming without requiring additional configuration.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: htpc
+  labels:
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: arrs-stack
+    app.kubernetes.io/component: media-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: plex
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: plex
+        app.kubernetes.io/part-of: arrs-stack
+        app.kubernetes.io/component: media-server
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: plex
+          image: linuxserver/plex:latest
+          ports:
+            - name: plex
+              containerPort: 32400
+              protocol: TCP
+          env:
+            - name: TZ
+              value: Europe/London
+            - name: VERSION
+              value: docker
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 500m
+            limits:
+              memory: 4Gi
+              cpu: 4000m
+          readinessProbe:
+            httpGet:
+              path: /identity
+              port: 32400
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /identity
+              port: 32400
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: tv
+              mountPath: /data/tvshows
+            - name: movies
+              mountPath: /data/movies
+            - name: transcode
+              mountPath: /transcode
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: plex-config
+        - name: tv
+          persistentVolumeClaim:
+            claimName: media-tv
+        - name: movies
+          persistentVolumeClaim:
+            claimName: media-movies
+        - name: transcode
+          persistentVolumeClaim:
+            claimName: plex-transcode
+      restartPolicy: Always

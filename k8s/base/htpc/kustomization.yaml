@@ -1,0 +1,39 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Downloaders
+  - sabnzbd/deployment.yaml
+  - sabnzbd/service.yaml
+  - transmission/deployment.yaml
+  - transmission/service.yaml
+  # Indexer
+  - prowlarr/deployment.yaml
+  - prowlarr/service.yaml
+  # Media management
+  - seerr/deployment.yaml
+  - seerr/service.yaml
+  - radarr/deployment.yaml
+  - radarr/service.yaml
+  - sonarr/deployment.yaml
+  - sonarr/service.yaml
+  # Book/comic management
+  - mylar3/deployment.yaml
+  - mylar3/service.yaml
+  - shelfmark/deployment.yaml
+  - shelfmark/service.yaml
+  - livrarr/deployment.yaml
+  - livrarr/service.yaml
+  - audiobookshelf/deployment.yaml
+  - audiobookshelf/service.yaml
+  # Media servers
+  - jellyfin/deployment.yaml
+  - jellyfin/service.yaml
+  - plex/deployment.yaml
+  - plex/service.yaml
+  # Monitoring
+  - tautulli/deployment.yaml
+  - tautulli/service.yaml
+  # Network utilities
+  - flaresolverr/deployment.yaml
+  - flaresolverr/service.yaml

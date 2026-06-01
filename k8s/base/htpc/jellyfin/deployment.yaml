@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: htpc
+  labels:
+    app.kubernetes.io/name: jellyfin
+    app.kubernetes.io/part-of: arrs-stack
+    app.kubernetes.io/component: media-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jellyfin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jellyfin
+        app.kubernetes.io/part-of: arrs-stack
+        app.kubernetes.io/component: media-server
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:latest
+          ports:
+            - name: http
+              containerPort: 8096
+              protocol: TCP
+            - name: https
+              containerPort: 8920
+              protocol: TCP
+            - name: local-disc
+              containerPort: 7359
+              protocol: UDP
+            - name: dlna
+              containerPort: 1900
+              protocol: UDP
+          env:
+            - name: TZ
+              value: Etc/UTC
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 500m
+            limits:
+              memory: 4Gi
+              cpu: 4000m
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8096
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8096
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: tv
+              mountPath: /data/tvshows
+            - name: movies
+              mountPath: /data/movies
+            - name: plugins
+              mountPath: /plugins
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: tv
+          persistentVolumeClaim:
+            claimName: media-tv
+        - name: movies
+          persistentVolumeClaim:
+            claimName: media-movies
+        - name: plugins
+          persistentVolumeClaim:
+            claimName: jellyfin-plugins
+      restartPolicy: Always

@@ -1,0 +1,58 @@
+---
+# Single-node MicroK8s overlay.
+# Extends the base with MicroK8s-specific settings:
+#   - Uses the microk8s-hostpath StorageClass for dynamic provisioning
+#     (already referenced in the Elasticsearch volumeClaimTemplate)
+#   - Tolerates the control-plane taint so pods can run on the single node
+#     that is also the control plane.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+
+patches:
+  # Allow all Deployments and DaemonSets to run on the control-plane node.
+  # MicroK8s single-node setups do not taint the control plane by default,
+  # but this is included defensively in case --control-plane-taint is set.
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: not-used
+      spec:
+        template:
+          spec:
+            tolerations:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+    target:
+      kind: Deployment
+  - patch: |
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: not-used
+      spec:
+        template:
+          spec:
+            tolerations:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+    target:
+      kind: StatefulSet
+  - patch: |
+      apiVersion: apps/v1
+      kind: DaemonSet
+      metadata:
+        name: not-used
+      spec:
+        template:
+          spec:
+            tolerations:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+    target:
+      kind: DaemonSet
