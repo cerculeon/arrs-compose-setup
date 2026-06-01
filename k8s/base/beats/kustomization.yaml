@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - filebeat/rbac.yaml
+  - filebeat/ilm-configmap.yaml
+  - filebeat/configmap.yaml
+  - filebeat/daemonset.yaml
+  - metricbeat/rbac.yaml
+  - metricbeat/ilm-configmap.yaml
+  - metricbeat/configmap.yaml
+  - metricbeat/daemonset.yaml

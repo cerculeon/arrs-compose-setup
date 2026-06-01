@@ -1,0 +1,22 @@
+---
+# Plex uses hostNetwork so its port is directly accessible on the node IP.
+# This ClusterIP service still provides a stable in-cluster DNS entry for
+# other services that reference Plex by name.
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex
+  namespace: htpc
+  labels:
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: arrs-stack
+    app.kubernetes.io/component: media-server
+spec:
+  selector:
+    app.kubernetes.io/name: plex
+  type: ClusterIP
+  ports:
+    - name: plex
+      port: 32400
+      targetPort: 32400
+      protocol: TCP

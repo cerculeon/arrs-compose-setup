@@ -1,0 +1,27 @@
+---
+# Portainer CE for Kubernetes needs cluster-wide read access plus limited write access.
+# We bind to the built-in cluster-admin role for full management capability.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: portainer
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: portainer
+    app.kubernetes.io/part-of: arrs-stack
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: portainer
+  labels:
+    app.kubernetes.io/name: portainer
+    app.kubernetes.io/part-of: arrs-stack
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: portainer
+    namespace: observability

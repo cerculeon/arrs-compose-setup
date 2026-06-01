@@ -1,0 +1,8 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cloudflared/deployment.yaml
+  # NOTE: secret-template.yaml is excluded from the base kustomization.
+  # The secret is created by CI from GitHub Secrets — never committed with
+  # real values. See k8s/secrets/README.md for details.

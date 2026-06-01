@@ -4,3 +4,12 @@ HTPC/HTPC_envValues.env
 OBSERVER/OBSERVER_envValues.env
 .vscode/*
 .vscode
+
+# Kubernetes secrets — never commit real secret values
+k8s/secrets/*.yaml
+k8s/secrets/*.json
+# Except the README
+!k8s/secrets/README.md
+# Local kubeconfig overrides
+*.kubeconfig
+kubeconfig

@@ -1,0 +1,120 @@
+---
+# Deploys the full Kubernetes stack to a MicroK8s node.
+#
+# Prerequisites:
+#   - GitHub Secret KUBECONFIG_B64: base64-encoded kubeconfig for the MicroK8s node
+#     (microk8s config | base64 -w 0)
+#   - GitHub Secret CLOUDFLARED_TUNNEL_TOKEN: Cloudflare Tunnel token
+#
+# If using a self-hosted runner on the MicroK8s node, KUBECONFIG_B64 is not
+# required — set the runner to use microk8s kubectl directly.
+name: Deploy to MicroK8s
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'k8s/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # To use a self-hosted runner on the MicroK8s node, replace the line above with:
+    # runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up kubeconfig
+        env:
+          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
+        run: |
+          mkdir -p ~/.kube
+          echo "${KUBECONFIG_B64}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Install kubectl
+        run: |
+          curl -sSL "https://dl.k8s.io/release/$(curl -sSL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+            -o /usr/local/bin/kubectl
+          chmod +x /usr/local/bin/kubectl
+          kubectl version --client
+
+      - name: Verify cluster connectivity
+        run: kubectl cluster-info
+
+      - name: Apply namespaces first
+        run: kubectl apply -k k8s/base/namespaces/
+
+      - name: Create / update cloudflared tunnel secret
+        env:
+          CLOUDFLARED_TUNNEL_TOKEN: ${{ secrets.CLOUDFLARED_TUNNEL_TOKEN }}
+        run: |
+          kubectl create secret generic cloudflared-tunnel-token \
+            --namespace htpc \
+            --from-literal=token="${CLOUDFLARED_TUNNEL_TOKEN}" \
+            --dry-run=client -o yaml \
+            | kubectl apply -f -
+
+      - name: Apply full stack (kustomize single-node overlay)
+        run: kubectl apply -k k8s/overlays/single-node
+
+      - name: Wait for Elasticsearch to be ready
+        run: |
+          kubectl rollout status statefulset/elasticsearch \
+            --namespace observability \
+            --timeout=300s
+
+      - name: Wait for Kibana to be ready
+        run: |
+          kubectl rollout status deployment/kibana \
+            --namespace observability \
+            --timeout=180s
+
+      - name: Wait for Portainer to be ready
+        run: |
+          kubectl rollout status deployment/portainer \
+            --namespace observability \
+            --timeout=120s
+
+      - name: Wait for beats DaemonSets to be ready
+        run: |
+          kubectl rollout status daemonset/filebeat \
+            --namespace observability \
+            --timeout=120s
+          kubectl rollout status daemonset/metricbeat \
+            --namespace observability \
+            --timeout=120s
+
+      - name: Wait for HTPC services to be ready
+        run: |
+          for deployment in \
+            sabnzbd transmission prowlarr seerr radarr sonarr \
+            mylar3 shelfmark livrarr audiobookshelf jellyfin plex \
+            tautulli flaresolverr cloudflared; do
+            echo "Waiting for ${deployment}..."
+            kubectl rollout status deployment/${deployment} \
+              --namespace htpc \
+              --timeout=300s
+          done
+
+      - name: Print deployment summary
+        if: always()
+        run: |
+          echo "=== Namespaces ==="
+          kubectl get namespaces
+
+          echo ""
+          echo "=== Observability Pods ==="
+          kubectl get pods --namespace observability
+
+          echo ""
+          echo "=== HTPC Pods ==="
+          kubectl get pods --namespace htpc
+
+          echo ""
+          echo "=== Persistent Volume Claims ==="
+          kubectl get pvc --all-namespaces

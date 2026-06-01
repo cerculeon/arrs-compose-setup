@@ -1,0 +1,61 @@
+---
+name: Kubernetes Manifest Validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint all YAML files in k8s/
+        run: |
+          yamllint -c .yamllint.yml $(find k8s/ -name '*.yaml' | tr '\n' ' ')
+
+  kubeconform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install kubeconform
+        run: |
+          curl -sSL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
+            | tar -xz -C /usr/local/bin kubeconform
+          kubeconform -v
+
+      - name: Validate base manifests
+        run: |
+          find k8s/base -name '*.yaml' \
+            ! -name 'kustomization.yaml' \
+            ! -name 'secret-template.yaml' \
+            | xargs kubeconform \
+              -strict \
+              -summary \
+              -kubernetes-version 1.31.0 \
+              -ignore-missing-schemas
+
+  kustomize-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install kubectl (includes kustomize)
+        run: |
+          curl -sSL "https://dl.k8s.io/release/$(curl -sSL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+            -o /usr/local/bin/kubectl
+          chmod +x /usr/local/bin/kubectl
+          kubectl version --client
+
+      - name: Build single-node overlay
+        run: |
+          kubectl kustomize k8s/overlays/single-node --output /dev/null
+          echo "Kustomize build succeeded"

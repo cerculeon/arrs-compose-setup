@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: metricbeat
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: metricbeat
+    app.kubernetes.io/part-of: arrs-stack
+    app.kubernetes.io/component: metric-shipper
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: metricbeat
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: metricbeat
+        app.kubernetes.io/part-of: arrs-stack
+        app.kubernetes.io/component: metric-shipper
+    spec:
+      serviceAccountName: metricbeat
+      terminationGracePeriodSeconds: 30
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: metricbeat
+          image: elastic/metricbeat:8.19.16
+          args:
+            - -c
+            - /usr/share/metricbeat/metricbeat.yml
+            - -e
+            - --system.hostfs=/hostfs
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          resources:
+            requests:
+              memory: 200Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/metricbeat/metricbeat.yml
+              subPath: metricbeat.yml
+              readOnly: true
+            - name: ilm-policy
+              mountPath: /usr/share/metricbeat/metricbeat-ilm.json
+              subPath: metricbeat-ilm.json
+              readOnly: true
+            - name: proc
+              mountPath: /hostfs/proc
+              readOnly: true
+            - name: cgroup
+              mountPath: /hostfs/sys/fs/cgroup
+              readOnly: true
+            - name: hostfs
+              mountPath: /hostfs
+              readOnly: true
+              mountPropagation: HostToContainer
+      volumes:
+        - name: config
+          configMap:
+            name: metricbeat-config
+        - name: ilm-policy
+          configMap:
+            name: metricbeat-ilm-policy
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+        - name: hostfs
+          hostPath:
+            path: /

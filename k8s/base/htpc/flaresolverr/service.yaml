@@ -1,0 +1,20 @@
+---
+# ClusterIP only — FlareSolverr is an internal service for Prowlarr
+apiVersion: v1
+kind: Service
+metadata:
+  name: flaresolverr
+  namespace: htpc
+  labels:
+    app.kubernetes.io/name: flaresolverr
+    app.kubernetes.io/part-of: arrs-stack
+    app.kubernetes.io/component: network-utility
+spec:
+  selector:
+    app.kubernetes.io/name: flaresolverr
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8191
+      targetPort: 8191
+      protocol: TCP

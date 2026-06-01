@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: filebeat
+    app.kubernetes.io/part-of: arrs-stack
+    app.kubernetes.io/component: log-shipper
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: filebeat
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: filebeat
+        app.kubernetes.io/part-of: arrs-stack
+        app.kubernetes.io/component: log-shipper
+    spec:
+      serviceAccountName: filebeat
+      terminationGracePeriodSeconds: 30
+      hostNetwork: false
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: filebeat
+          image: elastic/filebeat:8.19.16
+          args:
+            - -c
+            - /usr/share/filebeat/filebeat.yml
+            - -e
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          securityContext:
+            runAsUser: 0
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/filebeat/filebeat.yml
+              subPath: filebeat.yml
+              readOnly: true
+            - name: ilm-policy
+              mountPath: /usr/share/filebeat/filebeat-ilm.json
+              subPath: filebeat-ilm.json
+              readOnly: true
+            - name: varlogcontainers
+              mountPath: /var/log/containers
+              readOnly: true
+            - name: varlogpods
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: varlibkubeletpods
+              mountPath: /var/lib/kubelet/pods
+              readOnly: true
+            - name: filebeat-logs
+              mountPath: /var/log/filebeat
+      volumes:
+        - name: config
+          configMap:
+            name: filebeat-config
+        - name: ilm-policy
+          configMap:
+            name: filebeat-ilm-policy
+        - name: varlogcontainers
+          hostPath:
+            path: /var/log/containers
+        - name: varlogpods
+          hostPath:
+            path: /var/log/pods
+        - name: varlibkubeletpods
+          hostPath:
+            path: /var/lib/kubelet/pods
+        - name: filebeat-logs
+          persistentVolumeClaim:
+            claimName: filebeat-logs
