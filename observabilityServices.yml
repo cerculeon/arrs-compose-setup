@@ -41,13 +41,14 @@ services:
       - elasticsearch
 
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer-ce:latest
     container_name: portainer
-    command: -H tcp://${BEATS_HOST}:2375  # Connect to the remote Docker instance
     ports:
-      - '9191:9000'
+      - '9443:9443'
+      - '9000:9000'
     volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'  # Required to access Docker API
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '${CONFIG_ROOT}/portainer:/data'
     restart: unless-stopped
     networks:
       - esnet

@@ -157,7 +157,7 @@ docker restart filebeat metricbeat
 See [Beats config file ownership error](#beats-config-file-ownership-error) in Troubleshooting if the containers still fail to start.
     - Kibana: http://<observer-host>:5601
     - Elasticsearch API: http://<observer-host>:9200
-    - Portainer: http://<observer-host>:9191
+    - Portainer: https://<observer-host>:9443
 
 ## Configuration
 
@@ -280,8 +280,8 @@ Note: the observer script currently writes config output to HTPCconfig.yml as we
 
 - Elasticsearch and Kibana images in [observabilityServices.yml](observabilityServices.yml) are ARM64-tagged.
 - If your observer host is not ARM64, use compatible image tags.
-- Portainer is configured to connect to a Docker TCP endpoint based on BEATS_HOST.
-- Ensure Docker remote API exposure is intentional and secured.
+- Portainer stores its persistent data under `${CONFIG_ROOT}/portainer`.
+- Portainer uses the local Docker socket mount instead of a remote Docker TCP endpoint.
 
 ## Troubleshooting
 
