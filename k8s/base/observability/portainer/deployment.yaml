@@ -74,7 +74,7 @@ spec:
             sources:
               - serviceAccountToken:
                   path: token
-                  expirationSeconds: 3607
+                  expirationSeconds: 3600
               - configMap:
                   name: kube-root-ca.crt
                   items:

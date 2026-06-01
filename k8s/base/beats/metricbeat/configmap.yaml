@@ -28,7 +28,7 @@ data:
           by_cpu: 5
           by_memory: 5
 
-      # Kubernetes node/pod/container metrics via the API server
+      # Kubernetes node/pod/container metrics via the kubelet API
       - module: kubernetes
         metricsets:
           - node
@@ -42,22 +42,22 @@ data:
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         ssl.verification_mode: "none"
         add_metadata: true
-
-      # Kubernetes state metrics (cluster-wide)
-      - module: kubernetes
-        metricsets:
-          - state_node
-          - state_deployment
-          - state_replicaset
-          - state_statefulset
-          - state_pod
-          - state_container
-          - state_persistentvolume
-          - state_persistentvolumeclaim
-          - event
-        period: 10s
-        hosts: ["kube-state-metrics:8080"]
-        add_metadata: true
+      # To collect cluster-wide state metrics (deployments, replicasets, etc.)
+      # deploy kube-state-metrics and uncomment the block below:
+      # - module: kubernetes
+      #   metricsets:
+      #     - state_node
+      #     - state_deployment
+      #     - state_replicaset
+      #     - state_statefulset
+      #     - state_pod
+      #     - state_container
+      #     - state_persistentvolume
+      #     - state_persistentvolumeclaim
+      #     - event
+      #   period: 10s
+      #   hosts: ["kube-state-metrics:8080"]
+      #   add_metadata: true
 
     setup.kibana:
       host: "http://kibana.observability.svc.cluster.local:5601"

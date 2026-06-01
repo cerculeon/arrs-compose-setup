@@ -283,7 +283,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   volumeMode: Filesystem
   hostPath:
-    path: /media/transcode
+    path: /mnt/media/transcode
     type: DirectoryOrCreate
 ---
 apiVersion: v1

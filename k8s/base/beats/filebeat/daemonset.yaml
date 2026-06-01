@@ -22,7 +22,7 @@ spec:
       serviceAccountName: filebeat
       terminationGracePeriodSeconds: 30
       hostNetwork: false
-      dnsPolicy: ClusterFirstWithHostNet
+      dnsPolicy: ClusterFirst
       containers:
         - name: filebeat
           image: elastic/filebeat:8.19.16
